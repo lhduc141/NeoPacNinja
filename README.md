@@ -1,1 +1,1 @@
-# MarioMan
+# NeoPac Ninja
