@@ -43,14 +43,10 @@ map.forEach((row,i) => {
         }
     })
 }) 
-boundaries.forEach(boundary =>{
-    boundary.draw()
-})
-
 
 
 class Player{
-    construct({postition, velocity}){
+    constructor({position, velocity}){
         this.position = position
         this.velocity = velocity
         this.radius = 15
@@ -60,8 +56,8 @@ class Player{
         c.beginPath()
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
         c.fillStyle = 'yellow'
-        c.fill
-        c.closePath
+        c.fill()
+        c.closePath()
     }
 
     update(){
@@ -71,9 +67,6 @@ class Player{
 
     }
 }
-
-//const map =[]
-//const boundaries = []
 
 const player = new Player({
     position: {
@@ -114,15 +107,15 @@ function animate(){
 
     player.velocity.x = 0
     player.velocity.y = 0
-    if(key.w.pressed && lastKey === 'w'){
+    if(keys.w.pressed && lastKey === 'w'){
         player.velocity.y = -5
-    }else if(key.s.pressed && lastKey === 's'){
+    }else if(keys.s.pressed && lastKey === 's'){
         player.velocity.y = 5
     }
-    else if(key.a.pressed && lastKey === 'a'){
+    else if(keys.a.pressed && lastKey === 'a'){
         player.velocity.x = -5
     }
-    else if(key.d.pressed && lastKey === 'd'){
+    else if(keys.d.pressed && lastKey === 'd'){
         player.velocity.x = 5
     }
 }
@@ -149,6 +142,8 @@ addEventListener('keydown', ({key}) => {
         lastKey = 'd'
         break
     }
+    console.log(keys.d.pressed)
+    console.log(keys.s.pressed)
 
 })
 
@@ -169,8 +164,8 @@ addEventListener('keyup', ({key}) => {
         break
     }
 
-    console.log(key.d.pressed)
-    console.log(key.s.pressed)
+    console.log(keys.d.pressed)
+    console.log(keys.s.pressed)
     
 })
  
