@@ -10,8 +10,8 @@ class Boundary{
     static height = 20;
     constructor({position, image}){
         this.position = position;
-        this.width = 20
-        this.height = 20
+        this.width = 40
+        this.height = 40
         this.image = image; 
     }
     draw(){
@@ -22,6 +22,7 @@ class Boundary{
 }
 
 const map = [
+
     ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
     ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
     ['|', '.', 'b', '.', '[', '7', ']', '.', 'b', '.', '|'],
@@ -113,7 +114,7 @@ map.forEach((row,i) => {
                             x: Boundary.width*j,
                             y: Boundary.height*i
                         },
-                        image: creatImage('./img/ppipeCorner4.png')
+                        image: creatImage('./img/pipeCorner4.png')
                     })
                 )
             break;
