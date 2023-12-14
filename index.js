@@ -20,6 +20,76 @@ class Boundary{
         c.drawImage(this.image, this.position.x, this.position.y)
     }
 }
+
+class Player{
+    constructor({position, velocity}){
+        this.position = position
+        this.velocity = velocity
+        this.radius = 15
+    }
+
+    draw(){
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.fillStyle = 'yellow'
+        c.fill()
+        c.closePath()
+    }
+
+    update(){
+        this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+
+    }
+}
+
+class Pellet{
+    constructor({position}){
+        this.position = position
+        this.radius = 3
+    }
+
+    draw(){
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.fillStyle = 'white'
+        c.fill()
+        c.closePath()
+    }
+}
+
+const pellets = []
+const boundaries = []
+const player = new Player({
+    position: {
+        x: Boundary.width + Boundary.width / 2,
+        y: Boundary.height + Boundary.height / 2
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    }
+})
+
+const keys = {
+    w: {
+        pressed: false
+    },
+    s: {
+        pressed: false
+    },
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    },
+}
+
+
+let lastKey = ''
+
 const map = [
     ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
     ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
@@ -36,8 +106,6 @@ const map = [
     ['4', '-', '-', '-', '-', '-', '-', '-', '-', '-', '3'],
 ]
 
-const pellets = []
-const boundaries = []
 
 function createImage(src){
     const image = new Image();
@@ -217,87 +285,29 @@ map.forEach((row,i) => {
                     )
                     break
             case '8':
-                    boundaries.push(
-                      new Boundary({
+                boundaries.push(
+                    new Boundary({
                         position: {
                           x: j * Boundary.width,
                           y: i * Boundary.height
                         },
                         image: createImage('./img/pipeConnectorLeft.png')
+                       })
+                    )
+                    break
+            case '.':
+                pellets.push(
+                    new Pellet({
+                        position: {
+                          x: j * Boundary.width + Boundary.width / 2,
+                          y: i * Boundary.height + Boundary.height / 2
+                        }
                       })
                     )
-                    break;
+                    break
         }
     })
 }) 
-
-
-class Player{
-    constructor({position, velocity}){
-        this.position = position
-        this.velocity = velocity
-        this.radius = 15
-    }
-
-    draw(){
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = 'yellow'
-        c.fill()
-        c.closePath()
-    }
-
-    update(){
-        this.draw()
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-
-    }
-}
-
-class Pellet{
-    constructor({position}){
-        this.position = position
-        this.radius = 3
-    }
-
-    draw(){
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = 'white'
-        c.fill()
-        c.closePath()
-    }
-}
-
-const player = new Player({
-    position: {
-        x: Boundary.width + Boundary.width / 2,
-        y: Boundary.height + Boundary.height / 2
-    },
-    velocity: {
-        x: 0,
-        y: 0
-    }
-})
-
-const keys = {
-    w: {
-        pressed: false
-    },
-    s: {
-        pressed: false
-    },
-    a: {
-        pressed: false
-    },
-    d: {
-        pressed: false
-    },
-}
-
-let lastKey = ''
-
 
 function circleCollideWithRectangle({
     circle,
@@ -404,7 +414,7 @@ function animate(){
         }    
     }
 
-    pellets.forEach(pellet => {
+    pellets.forEach((pellet) => {
         pellet.draw()
     })
 
