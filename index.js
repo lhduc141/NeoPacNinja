@@ -2,6 +2,8 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 // console.log("hello")
 
+const scoreEl = document.querySelector('#scoreEl');
+
 canvas.width = innerWidth
 canvas.height = innerHeight
 
@@ -61,6 +63,7 @@ class Pellet{
 
 const pellets = []
 const boundaries = []
+
 const player = new Player({
     position: {
         x: Boundary.width + Boundary.width / 2,
@@ -87,8 +90,8 @@ const keys = {
     },
 }
 
-
 let lastKey = ''
+let score = 0
 
 const map = [
     ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
@@ -425,13 +428,11 @@ function animate(){
             ) <
             pellet.radius + player.radius
         ){
-            console.log("touching")
             pellets.splice(i, 1)
+            score += 10
+            scoreEl.innerHTML = score
         }
     }
-
-        
-
 
     boundaries.forEach((boundary) => {
         boundary.draw()
