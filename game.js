@@ -64,7 +64,7 @@
         // todo
         drawWalls();
         drawFoods();
-        pacmnan.draw();
+        pacman.draw();
         drawScore();
     };
 
@@ -123,15 +123,15 @@
         }
     };
 
-    let createNewPacman = () => {
+    let createNewPacman =() => {
         pacman = new Pacman(
             oneBlockSize, 
             oneBlockSize, 
             oneBlockSize, 
             oneBlockSize, 
             oneBlockSize / 5
-        )
-    }
+        );
+    };
 
     createNewPacman();
     gameLoop();

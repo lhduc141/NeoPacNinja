@@ -72,7 +72,7 @@ class Pacman{
     checkCollision(){
         let isCollided = false
         if(
-            map[this.getMapY()][this.getMapX] == 1 ||
+            map[this.getMapY()][this.getMapX()] == 1 ||
             map[this.getMapYRightSide()][this.getMapX()] == 1 ||
             map[this.getMapY()][this.getMapXRightSide()] == 1 ||
             map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
@@ -100,7 +100,7 @@ class Pacman{
     }
     changeAnimation(){
         this.currentFrame = 
-            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+            this.currentFrame == this.frameCount ? 1: this.currentFrame + 1;
     }
     draw(){
         canvasContext.save();
@@ -111,8 +111,8 @@ class Pacman{
         canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
 
         canvasContext.translate(
-            - this.x - oneBlockSize / 2, 
-            - this.y - oneBlockSize /2
+            -this.x - oneBlockSize / 2, 
+            -this.y - oneBlockSize /2
         );
 
         canvasContext.drawImage(
@@ -138,9 +138,9 @@ class Pacman{
         return parseInt(this.y / oneBlockSize)
     }
     getMapXRightSide(){
-        return parseInt((this.x + 0.9999) * oneBlockSize / oneBlockSize)
+        return parseInt((this.x + 0.9999 * oneBlockSize) / oneBlockSize)
     }
     getMapYRightSide(){
-        return parseInt((this.y + 0.9999) * oneBlockSize / oneBlockSize)
+        return parseInt((this.y + 0.9999 * oneBlockSize) / oneBlockSize)
     }
 }
