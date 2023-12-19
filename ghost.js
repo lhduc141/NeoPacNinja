@@ -22,26 +22,32 @@ class Ghost {
     this.imageWidth = imageWidth;
     this.imageHeight = imageHeight;
     this.range = range
+    this.randomTargetsIndex = parseInt(
+        Math.random() * randomTargetsForGhosts.length
+    );
+    setInterval(() => {
+        this.changeRandomDirection()
+    }, 10000)
+  }
 
+  changeRandomDirection(){
+    this.randomTargetsIndex += 1;
+    this.randomTargetsIndex = this.randomTargetsIndex % 4;
   }
 
   moveProcess() {
+    if(this.isInRangeOfPacman()){
+        target = pacman
+    }else{
+        this.target = randomTargetsForGhosts[this.randomTargetsIndex];
+    }
     this.changeDirectionIfPossible();
     this.moveForwards();
     if (this.checkCollision()) {
       this.moveBackwards();
     }
   }
-  eat() {
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[0].length; j++) {
-        if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i) {
-          map[i][j] = 3;
-          score++;
-        }
-      }
-    }
-  }
+
   moveBackwards() {
     switch (this.direction) {
       case DIRECTION_RIGHT:
@@ -86,12 +92,27 @@ class Ghost {
     }
     return false;
   }
+
+  isInRangeOfPacman() {
+    let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
+    let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
+    if (
+        Math.sqrt(xDistance * xDistance + yDistance * yDistance) <=
+        this.range
+    ) {
+        return true;
+    }
+    return false;
+}
+
   checkGhostCollision() {}
   changeDirectionIfPossible() {
-    if (this.direction == this.nextDirection) return;
-
-    let tempDirection = this.direction;
-    this.direction = this.nextDirection;
+    let tempDirection = this.direction
+    this.direction = this.calculateNewDirection(
+        map,
+        parseInt(this.target.x / oneBlockSize),
+        parseInt(this.target.y / oneBlockSize)
+    )
     this.moveForwards();
     if (this.checkCollision()) {
       this.moveBackwards();

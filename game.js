@@ -22,6 +22,7 @@ let wallInnerColor = "black";
 let foodColor = "#FEB897"
 let score = 0;
 let ghosts = []
+let ghostCount = 4;
 
 let ghostLocation = [
     {x:0, y:0},
