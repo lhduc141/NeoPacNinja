@@ -97,14 +97,7 @@ let update = () => {
   }
 };
 
-// let restartGame = () => {
-//     createNewPacman()
-//     createGhosts()
-//     lives--;
-//     if(lives == 0){
-//         gameOver
-//     }
-// }
+
 let drawFoods = () => {
   for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[0].length; j++) {
