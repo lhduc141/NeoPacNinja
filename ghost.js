@@ -86,14 +86,21 @@ class Ghost {
   checkCollisions() {
     let isCollided = false;
     if (
-      map[this.getMapY()][this.getMapX()] == 1 ||
-      map[this.getMapYRightSide()][this.getMapX()] == 1 ||
-      map[this.getMapY()][this.getMapXRightSide()] == 1 ||
-      map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+      map[parseInt(this.y / oneBlockSize)][parseInt(this.x / oneBlockSize)] ==
+        1 ||
+      map[parseInt(this.y / oneBlockSize + 0.9999)][
+        parseInt(this.x / oneBlockSize)
+      ] == 1 ||
+      map[parseInt(this.y / oneBlockSize)][
+        parseInt(this.x / oneBlockSize + 0.9999)
+      ] == 1 ||
+      map[parseInt(this.y / oneBlockSize + 0.9999)][
+        parseInt(this.x / oneBlockSize + 0.9999)
+      ] == 1
     ) {
-      return true;
+      isCollided = true;
     }
-    return false;
+    return isCollided;
   }
 
   isInRangeOfPacman() {
@@ -119,19 +126,18 @@ class Ghost {
       this.direction = tempDirection;
       return;
     }
-    // if (
-    //     this.getMapY() != this.getMapYRightSide() &&
-    //     (this.direction == DIRECTION_LEFT ||
-    //         this.direction == DIRECTION_RIGHT)
-    // ) {
-    //     this.direction = DIRECTION_UP;
-    // }
-    // if (
-    //     this.getMapX() != this.getMapXRightSide() &&
-    //     this.direction == DIRECTION_UP
-    // ) {
-    //     this.direction = DIRECTION_LEFT;
-    // }
+    if (
+      this.getMapY() != this.getMapYRightSide() &&
+      (this.direction == DIRECTION_LEFT || this.direction == DIRECTION_RIGHT)
+    ) {
+      this.direction = DIRECTION_UP;
+    }
+    if (
+      this.getMapX() != this.getMapXRightSide() &&
+      this.direction == DIRECTION_UP
+    ) {
+      this.direction = DIRECTION_LEFT;
+    }
     this.moveForwards();
     if (this.checkCollisions()) {
       this.moveBackwards();
@@ -139,6 +145,7 @@ class Ghost {
     } else {
       this.moveBackwards();
     }
+    console.log(this.direction);
   }
 
   calculateNewDirection(map, destX, destY) {
