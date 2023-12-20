@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA_Compatible" content ="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoPacNinja</title>
+</head>
 
-    <!-- main CSS  -->
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <p><span>Score: </span><span id="scoreEl">0</span></p>
-    <canvas></canvas>
-    <script src="./index.js"></script>
-  </body>
+<body style="margin: 0px; background-color: black; overflow-y: hidden; overflow-x: hidden;">
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div style="display: none">
+        <img id="animations" src="assets/animations.gif" alt="">
+        <img id="ghosts" src="assets/ghost.png" alt="">
+    </div>
+    <script src="ghost.js"></script>
+    <script src="pacman.js"></script>
+    <script src="game.js"></script>
+</body>
+
 </html>
