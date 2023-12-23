@@ -12,7 +12,7 @@ const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
-let lives = 3;
+let lives = 1;
 let ghostCount = 4;
 let ghostImageLocations = [
     { x: 0, y: 0 },
@@ -102,6 +102,8 @@ let onGhostCollision = () => {
     lives--;
     restartPacmanAndGhosts();
     if (lives == 0) {
+        clearInterval(gameInterval);
+        gameOver();
     }
 };
 
@@ -136,10 +138,10 @@ let gameOver =() =>{
 };
 
 let drawGameOver =() =>{
-  canvasContext.font = "20px Emulogic";
+  canvasContext.font = "40px Emulogic";
   canvasContext.fillStyle = "white";
-  canvasContext.fillText = ("Game Over!", 200, 200);
-}
+  canvasContext.fillText("Game Over!", 110, 240);
+};
 
 let drawRemainingLives = () => {
     canvasContext.font = "20px Emulogic";
@@ -179,7 +181,7 @@ let draw = () => {
     drawGhosts();
     pacman.draw();
     drawScore();
-    drawRemainingLives();
+    // drawRemainingLives();
 };
 
 let drawWalls = () => {
