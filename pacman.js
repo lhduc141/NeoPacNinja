@@ -14,6 +14,7 @@ class Pacman {
       }, 100);
   }
 
+
   moveProcess() {
       this.changeDirectionIfPossible();
       this.moveForwards();
