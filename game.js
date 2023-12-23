@@ -5,6 +5,10 @@ const pacmanFrames = document.getElementById("animations");
 const ghostFrames = document.getElementById("ghosts");
 const walls = document.getElementById("walls");
 const grounds = document.getElementById("ground");
+const tunnel = document.getElementById("tunnel");
+const speed = document.getElementById("speed");
+const key = document.getElementById("key");
+const finish = document.getElementById("finish");
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
@@ -19,6 +23,7 @@ let score = 0;
 let ghosts = [];
 let ghostCount = 4;
 let lives = 3;
+let keys = 3; 
 
 let ghostImageLocations = [
   { x: 0, y: 0 },
@@ -27,29 +32,29 @@ let ghostImageLocations = [
   { x: 176, y: 121 },
 ];
 
-const map = [
+let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+  [1, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 6, 1, 2, 2, 2, 2, 2, 1],
   [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
   [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
   [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-  [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+  [5, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
   [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
   [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 6, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
   [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
   [1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1],
   [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
-  [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 5, 1, 1, 1, 1, 2, 1],
+  [1, 2, 2, 2, 2, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
@@ -90,20 +95,78 @@ let update = () => {
   if (pacman.checkGhostCollision(ghosts)) {
     onGhostCollision();
   }
+  checkKey();
 };
 
 let drawGround = () => {
   for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[0].length; j++) {
-      if (map[i][j] == 2 || map[i][j] == 3) {
-        canvasContext.drawImage(
-          grounds, 
-          j * oneBlockSize,
-          i * oneBlockSize,
-          oneBlockSize,
-          oneBlockSize,
-        )
+      switch (map[i][j]){
+        case 2:
+          canvasContext.drawImage(
+            grounds, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break; 
+        case 3:
+          canvasContext.drawImage(
+            grounds, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break; 
+        case 4: 
+          canvasContext.drawImage(
+            speed, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break; 
+        case 5: 
+          canvasContext.drawImage(
+            tunnel, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break; 
+        case 6: 
+          canvasContext.drawImage(
+            key, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break; 
+        case 7: 
+          canvasContext.drawImage(
+            finish, 
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+          )
+          break;
       }
+        
+      // if (map[i][j] == 2 || map[i][j] == 3) {
+      //   canvasContext.drawImage(
+      //     grounds, 
+      //     j * oneBlockSize,
+      //     i * oneBlockSize,
+      //     oneBlockSize,
+      //     oneBlockSize,
+      //   )
+      // }
       
     }
   }
@@ -143,7 +206,7 @@ let draw = () => {
   createRect(0, 0, canvas.width, canvas.height, "black");
   drawWalls();
   drawGround();
-  drawFoods();
+  // drawFoods();
   drawScore();
   pacman.draw();
   drawGhosts();
@@ -188,7 +251,7 @@ let createGhosts = () => {
   ghosts = [];
   for (let i = 0; i < ghostCount * 2; i++) {
     let newGhost = new Ghost(
-      9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+      9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize*0,
       10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
       oneBlockSize,
       oneBlockSize,
@@ -202,6 +265,12 @@ let createGhosts = () => {
     ghosts.push(newGhost);
   }
 };
+
+let checkKey = () => {
+  if (keys==0){
+    map[1][1] = 7
+  }
+}
 
 createNewPacman();
 createGhosts();
