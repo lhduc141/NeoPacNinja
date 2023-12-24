@@ -25,19 +25,26 @@ class Pacman {
   }
 
   eat() {
-      for (let i = 0; i < map.length; i++) {
-          for (let j = 0; j < map[0].length; j++) {
-              if (
-                  map[i][j] == 2 &&
-                  this.getMapX() == j &&
-                  this.getMapY() == i
-              ) {
-                  map[i][j] = 3;
-                  score++;
-              }
-          }
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[0].length; j++) {
+        //eat point
+        if (map[i][j] == 2 && this.getMapX() == j && this.getMapY() == i) {
+          map[i][j] = 3;
+          score++;
+        }
+        //speed
+        if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
+          map[i][j] = 2;
+          this.speed = oneBlockSize/5; 
+        }
+        //key
+        if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
+          map[i][j] = 2;
+          keys--;
+        }
       }
-  }
+    }
+  } 
 
   moveBackwards() {
       switch (this.direction) {
