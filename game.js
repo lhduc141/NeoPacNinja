@@ -73,22 +73,6 @@ let randomTargetsForGhosts = [
   },
 ];
 
-// for (let i = 0; i < map.length; i++) {
-//     for (let j = 0; j < map[0].length; j++) {
-//         map[i][j] = 2;
-//     }
-// }
-
-let createNewPacman = () => {
-  pacman = new Pacman(
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 5
-  );
-};
-
 let gameLoop = () => {
   update();
   draw();
@@ -98,6 +82,12 @@ let restartPacmanAndGhosts = () => {
   createNewPacman();
   createGhosts();
 };
+
+// for (let i = 0; i < map.length; i++) {
+//     for (let j = 0; j < map[0].length; j++) {
+//         map[i][j] = 2;
+//     }
+// }
 
 let onGhostCollision = () => {
   lives--;
@@ -275,6 +265,16 @@ let drawWalls = () => {
       }
     }
   }
+};
+
+let createNewPacman = () => {
+  pacman = new Pacman(
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize / 5
+  );
 };
 
 let createGhosts = () => {
