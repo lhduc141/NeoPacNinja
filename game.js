@@ -15,16 +15,18 @@ const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 
+// Game variables
 let fps = 30;
 let pacman;
 let oneBlockSize = 20;
 let foodColor = "#FEB897";
+
 let score = 0;
+let keys = 3;
+let lives = 1;
+
 let ghosts = [];
 let ghostCount = 4;
-let lives = 3;
-let keys = 3; 
-
 let ghostImageLocations = [
   { x: 0, y: 0 },
   { x: 176, y: 0 },
@@ -32,9 +34,12 @@ let ghostImageLocations = [
   { x: 176, y: 121 },
 ];
 
+// we now create the map of the walls,
+// if 1 wall, if 0 not wall
+// 21 columns // 23 rows
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1], 
+  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
   [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
   [1, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -78,10 +83,18 @@ let restartPacmanAndGhosts = () => {
   createGhosts();
 };
 
+// for (let i = 0; i < map.length; i++) {
+//     for (let j = 0; j < map[0].length; j++) {
+//         map[i][j] = 2;
+//     }
+// }
+
 let onGhostCollision = () => {
   lives--;
   restartPacmanAndGhosts();
   if (lives == 0) {
+    clearInterval(gameInterval);
+    gameOver();
   }
 };
 
@@ -98,80 +111,6 @@ let update = () => {
   checkKey();
 };
 
-let drawGround = () => {
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      switch (map[i][j]){
-        case 2:
-          canvasContext.drawImage(
-            grounds, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break; 
-        case 3:
-          canvasContext.drawImage(
-            grounds, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break; 
-        case 4: 
-          canvasContext.drawImage(
-            speed, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break; 
-        case 5: 
-          canvasContext.drawImage(
-            tunnel, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break; 
-        case 6: 
-          canvasContext.drawImage(
-            key, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break; 
-        case 7: 
-          canvasContext.drawImage(
-            finish, 
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-          )
-          break;
-      }
-        
-      // if (map[i][j] == 2 || map[i][j] == 3) {
-      //   canvasContext.drawImage(
-      //     grounds, 
-      //     j * oneBlockSize,
-      //     i * oneBlockSize,
-      //     oneBlockSize,
-      //     oneBlockSize,
-      //   )
-      // }
-      
-    }
-  }
-};
-
 let drawFoods = () => {
   for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[0].length; j++) {
@@ -184,7 +123,6 @@ let drawFoods = () => {
           foodColor
         );
       }
-      
     }
   }
 };
@@ -205,12 +143,11 @@ let draw = () => {
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
   createRect(0, 0, canvas.width, canvas.height, "black");
   drawWalls();
-  drawGround();
-  // drawFoods();
-  drawScore();
-  pacman.draw();
+  drawFoods();
   drawGhosts();
-
+  pacman.draw();
+  drawScore();
+  // drawRemainingLives();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -220,18 +157,111 @@ let createRect = (x, y, width, height, img) => {
   canvasContext.fillRect(x, y, width, height);
 };
 
+let gameOver = () => {
+  drawGameOver();
+  clearInterval(gameInterval);
+};
+
+let drawGameOver = () => {
+  canvasContext.font = "40px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("Game Over!", 110, 240);
+};
+
+let drawRemainingLives = () => {
+  canvasContext.font = "20px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
+
+  for (let i = 0; i < lives; i++) {
+    canvasContext.drawImage(
+      pacmanFrames,
+      2 * oneBlockSize,
+      0,
+      oneBlockSize,
+      oneBlockSize,
+      350 + i * oneBlockSize,
+      oneBlockSize * map.length + 2,
+      oneBlockSize,
+      oneBlockSize
+    );
+  }
+};
+
+let drawGround = () => {
+  for (let i = 0; i < map.length; i++) {
+    for (let j = 0; j < map[0].length; j++) {
+      switch (map[i][j]) {
+        case 2:
+          canvasContext.drawImage(
+            grounds,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+        case 3:
+          canvasContext.drawImage(
+            grounds,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+        case 4:
+          canvasContext.drawImage(
+            speed,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+        case 5:
+          canvasContext.drawImage(
+            tunnel,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+        case 6:
+          canvasContext.drawImage(
+            key,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+        case 7:
+          canvasContext.drawImage(
+            finish,
+            j * oneBlockSize,
+            i * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize
+          );
+          break;
+      }
+    }
+  }
+};
 
 let drawWalls = () => {
   for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[0].length; j++) {
       if (map[i][j] == 1) {
         canvasContext.drawImage(
-          walls, 
+          walls,
           j * oneBlockSize,
           i * oneBlockSize,
           oneBlockSize,
-          oneBlockSize,
-        )
+          oneBlockSize
+        );
       }
     }
   }
@@ -251,7 +281,7 @@ let createGhosts = () => {
   ghosts = [];
   for (let i = 0; i < ghostCount * 2; i++) {
     let newGhost = new Ghost(
-      9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize*0,
+      9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
       10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
       oneBlockSize,
       oneBlockSize,
@@ -267,10 +297,10 @@ let createGhosts = () => {
 };
 
 let checkKey = () => {
-  if (keys==0){
-    map[1][1] = 7
+  if (keys == 0) {
+    map[1][1] = 7;
   }
-}
+};
 
 createNewPacman();
 createGhosts();
