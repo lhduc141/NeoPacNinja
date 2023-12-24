@@ -7,7 +7,7 @@ let createRect = (x, y, width, height, color) => {
     canvasContext.fillStyle = color;
     canvasContext.fillRect(x, y, width, height);
 };
-
+const DIRECTION_IDLE = 0;
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
@@ -60,6 +60,21 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+const teleport_positions = [
+    {
+        origin: [-1, 10],
+        target: [20, 10],
+    },
+    {
+        origin: [1, 15],
+        target: [20, 10],
+    },
+    {
+        origin: [20, 10],
+        target: [0, 10],
+    },
+];
+
 let randomTargetsForGhosts = [
     { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
     { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
@@ -87,8 +102,11 @@ let createNewPacman = () => {
 };
 
 let gameLoop = () => {
-    draw();
     update();
+    if (lives == 0) {
+        return;
+    }
+    draw();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -104,6 +122,7 @@ let onGhostCollision = () => {
     if (lives == 0) {
         clearInterval(gameInterval);
         gameOver();
+        console.log("Game Over")
     }
 };
 
@@ -132,15 +151,15 @@ let drawFoods = () => {
     }
 };
 
-let gameOver =() =>{
-  drawGameOver();
-  clearInterval(gameInterval);
+let gameOver = () => {
+    drawGameOver();
+    clearInterval(gameInterval);
 };
 
-let drawGameOver =() =>{
-  canvasContext.font = "40px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("Game Over!", 110, 240);
+let drawGameOver = () => {
+    canvasContext.font = "40px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Game Over!", 110, 240);
 };
 
 let drawRemainingLives = () => {
