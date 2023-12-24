@@ -26,7 +26,7 @@ class Ghost {
     this.target = randomTargetsForGhosts[this.randomTargetIndex];
 
     this.hidePositionX = oneBlockSize * 2;
-    this.hidePositionY = oneBlockSize * 2;
+;
 
     setInterval(() => {
       this.changeRandomDirection();
