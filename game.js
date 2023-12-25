@@ -3,16 +3,30 @@ const canvasContext = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animation");
 const ghostFrames = document.getElementById("ghosts");
 
-let createRect = (x, y, width, height, color) => {
-    canvasContext.fillStyle = color;
-    canvasContext.fillRect(x, y, width, height);
-};
+const walls = document.getElementById("walls");
+const grounds = document.getElementById("ground");
+const tunnel = document.getElementById("tunnel");
+const speed = document.getElementById("speed");
+const key = document.getElementById("key");
+const finish = document.getElementById("finish");
+
 const DIRECTION_IDLE = 0;
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
+
+// Game variables
+let fps = 30;
+let pacman;
+let oneBlockSize = 20;
+let foodColor = "#FEB897";
+
+let score = 0;
+let keys = 3;
 let lives = 1;
+
+let ghosts = [];
 let ghostCount = 4;
 let ghostImageLocations = [
     { x: 0, y: 0 },
@@ -21,42 +35,39 @@ let ghostImageLocations = [
     { x: 176, y: 121 },
 ];
 
-// Game variables
-let fps = 30;
-let pacman;
-let oneBlockSize = 20;
-let score = 0;
-let ghosts = [];
-let wallSpaceWidth = oneBlockSize / 1.6;
-let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
-let wallInnerColor = "black";
-
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
 // 21 columns // 23 rows
+// 1: walls
+// 2: grounds
+// 3:
+// 4: speed
+// 5: tunnel
+// 6: keys
+// 7: finish
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-    [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
-    [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-    [1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1],
-    [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1],
+    [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
+    [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1],
+    [1, 7, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1],
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
+    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
@@ -85,12 +96,6 @@ let randomTargetsForGhosts = [
     },
 ];
 
-// for (let i = 0; i < map.length; i++) {
-//     for (let j = 0; j < map[0].length; j++) {
-//         map[i][j] = 2;
-//     }
-// }
-
 let createNewPacman = () => {
     pacman = new Pacman(
         oneBlockSize,
@@ -116,23 +121,32 @@ let restartPacmanAndGhosts = () => {
     createGhosts();
 };
 
+// for (let i = 0; i < map.length; i++) {
+//     for (let j = 0; j < map[0].length; j++) {
+//         map[i][j] = 2;
+//     }
+// }
+
 let onGhostCollision = () => {
     lives--;
     restartPacmanAndGhosts();
     if (lives == 0) {
         clearInterval(gameInterval);
         gameOver();
-        console.log("Game Over")
     }
 };
 
 let update = () => {
+    // todo
     pacman.moveProcess();
     pacman.eat();
-    updateGhosts();
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].moveProcess();
+    }
     if (pacman.checkGhostCollision(ghosts)) {
         onGhostCollision();
     }
+    checkKey();
 };
 
 let drawFoods = () => {
@@ -144,11 +158,44 @@ let drawFoods = () => {
                     i * oneBlockSize + oneBlockSize / 3,
                     oneBlockSize / 3,
                     oneBlockSize / 3,
-                    "#FEB897"
+                    foodColor
                 );
             }
         }
     }
+};
+
+let drawScore = () => {
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "Score: " + score,
+        0,
+        oneBlockSize * (map.length + 1)
+    );
+};
+
+let drawGhosts = () => {
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].draw();
+    }
+};
+
+let draw = () => {
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    createRect(0, 0, canvas.width, canvas.height, "black");
+    drawWalls();
+    drawGround();
+    drawFoods();
+    drawGhosts();
+    pacman.draw();
+    drawScore();
+    // drawRemainingLives();
+};
+
+let createRect = (x, y, width, height, img) => {
+    canvasContext.fillStyle = img;
+    canvasContext.fillRect(x, y, width, height);
 };
 
 let gameOver = () => {
@@ -182,77 +229,80 @@ let drawRemainingLives = () => {
     }
 };
 
-let drawScore = () => {
-    canvasContext.font = "20px Emulogic";
-    canvasContext.fillStyle = "white";
-    canvasContext.fillText(
-        "Score: " + score,
-        0,
-        oneBlockSize * (map.length + 1)
-    );
-};
-
-let draw = () => {
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-    createRect(0, 0, canvas.width, canvas.height, "black");
-    drawWalls();
-    drawFoods();
-    drawGhosts();
-    pacman.draw();
-    drawScore();
-    // drawRemainingLives();
+let drawGround = () => {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            switch (map[i][j]) {
+                case 2:
+                    canvasContext.drawImage(
+                        grounds,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 3:
+                    canvasContext.drawImage(
+                        grounds,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 4:
+                    canvasContext.drawImage(
+                        speed,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 5:
+                    canvasContext.drawImage(
+                        tunnel,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 6:
+                    canvasContext.drawImage(
+                        key,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 7:
+                    canvasContext.drawImage(
+                        finish,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+            }
+        }
+    }
 };
 
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[0].length; j++) {
             if (map[i][j] == 1) {
-                createRect(
+                canvasContext.drawImage(
+                    walls,
                     j * oneBlockSize,
                     i * oneBlockSize,
                     oneBlockSize,
-                    oneBlockSize,
-                    "#342DCA"
+                    oneBlockSize
                 );
-                if (j > 0 && map[i][j - 1] == 1) {
-                    createRect(
-                        j * oneBlockSize,
-                        i * oneBlockSize + wallOffset,
-                        wallSpaceWidth + wallOffset,
-                        wallSpaceWidth,
-                        wallInnerColor
-                    );
-                }
-
-                if (j < map[0].length - 1 && map[i][j + 1] == 1) {
-                    createRect(
-                        j * oneBlockSize + wallOffset,
-                        i * oneBlockSize + wallOffset,
-                        wallSpaceWidth + wallOffset,
-                        wallSpaceWidth,
-                        wallInnerColor
-                    );
-                }
-
-                if (i < map.length - 1 && map[i + 1][j] == 1) {
-                    createRect(
-                        j * oneBlockSize + wallOffset,
-                        i * oneBlockSize + wallOffset,
-                        wallSpaceWidth,
-                        wallSpaceWidth + wallOffset,
-                        wallInnerColor
-                    );
-                }
-
-                if (i > 0 && map[i - 1][j] == 1) {
-                    createRect(
-                        j * oneBlockSize + wallOffset,
-                        i * oneBlockSize,
-                        wallSpaceWidth,
-                        wallSpaceWidth + wallOffset,
-                        wallInnerColor
-                    );
-                }
             }
         }
     }
@@ -277,24 +327,31 @@ let createGhosts = () => {
     }
 };
 
+let checkKey = () => {
+    if (keys == 0) {
+        map[1][1] = 7;
+    }
+};
+
 createNewPacman();
 createGhosts();
 gameLoop();
 
 window.addEventListener("keydown", (event) => {
     let k = event.keyCode;
+
     setTimeout(() => {
         if (k == 37 || k == 65) {
-            // left arrow or a
+            //left
             pacman.nextDirection = DIRECTION_LEFT;
-        } else if (k == 38 || k == 87) {
-            // up arrow or w
-            pacman.nextDirection = DIRECTION_UP;
         } else if (k == 39 || k == 68) {
-            // right arrow or d
+            //right
             pacman.nextDirection = DIRECTION_RIGHT;
+        } else if (k == 38 || k == 87) {
+            //up
+            pacman.nextDirection = DIRECTION_UP;
         } else if (k == 40 || k == 83) {
-            // bottom arrow or s
+            //bottom
             pacman.nextDirection = DIRECTION_BOTTOM;
         }
     }, 1);
