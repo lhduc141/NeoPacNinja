@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pacman</title>
+  </head>
 
 <head>
     <meta charset="UTF-8">
@@ -10,13 +16,18 @@
 
 <body style="margin: 0; background-color: black;">
     <canvas id="canvas" width="500" height="500"></canvas>
-    <div style="display:none;">
-        <img id="animation" src="animations.gif" width="140" height="20">
-        <img id="ghosts" src="ghost.png" width="140" height="20">
+    <div style="display: none">
+      <img id="animation" src="assets/animations.gif" width="140" height="20" />
+      <img id="ghosts" src="assets/ghost.png" width="140" height="20" />
+      <img id="walls" src="assets/walls.png" width="140" height="20" />
+      <img id="ground" src="assets/grounds.png" width="140" height="20" />
+      <img id="speed" src="assets/speed.png" width="140" height="20" />
+      <img id="tunnel" src="assets/tunnel.png" width="140" height="20" />
+      <img id="key" src="assets/keys.png" width="140" height="20" />
+      <img id="finish" src="assets/finish.png" width="140" height="20" />
     </div>
     <script src="ghost.js"></script>
     <script src="pacman.js"></script>
     <script src="game.js"></script>
-</body>
-
+  </body>
 </html>
