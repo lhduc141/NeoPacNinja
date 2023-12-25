@@ -1,8 +1,8 @@
 const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
-
-const pacmanFrames = document.getElementById("animations");
+const pacmanFrames = document.getElementById("animation");
 const ghostFrames = document.getElementById("ghosts");
+
 const walls = document.getElementById("walls");
 const grounds = document.getElementById("ground");
 const tunnel = document.getElementById("tunnel");
@@ -10,6 +10,7 @@ const speed = document.getElementById("speed");
 const key = document.getElementById("key");
 const finish = document.getElementById("finish");
 
+const DIRECTION_IDLE = 0;
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
@@ -70,6 +71,21 @@ let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+const teleport_positions = [
+  {
+    origin: [-1, 10],
+    target: [20, 10],
+  },
+  {
+    origin: [1, 15],
+    target: [20, 10],
+  },
+  {
+    origin: [20, 10],
+    target: [0, 10],
+  },
+];
+
 let randomTargetsForGhosts = [
   { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
   { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
@@ -80,10 +96,25 @@ let randomTargetsForGhosts = [
   },
 ];
 
+let createNewPacman = () => {
+  pacman = new Pacman(
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize / 5
+  );
+};
+
 let gameLoop = () => {
   update();
+  if (lives == 0) {
+    return;
+  }
   draw();
 };
+
+let gameInterval = setInterval(gameLoop, 1000 / fps);
 
 let restartPacmanAndGhosts = () => {
   createNewPacman();
@@ -150,14 +181,13 @@ let draw = () => {
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
   createRect(0, 0, canvas.width, canvas.height, "black");
   drawWalls();
+  drawGround();
   drawFoods();
   drawGhosts();
   pacman.draw();
   drawScore();
   // drawRemainingLives();
 };
-
-let gameInterval = setInterval(gameLoop, 1000 / fps);
 
 let createRect = (x, y, width, height, img) => {
   canvasContext.fillStyle = img;
@@ -272,16 +302,6 @@ let drawWalls = () => {
       }
     }
   }
-};
-
-let createNewPacman = () => {
-  pacman = new Pacman(
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 5
-  );
 };
 
 let createGhosts = () => {

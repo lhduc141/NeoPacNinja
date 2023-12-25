@@ -111,6 +111,10 @@ class Ghost {
     ) {
       isCollided = true;
     }
+
+    if (this.x < 0 || this.x > map[0].length * oneBlockSize) {
+      isCollided = true;
+    }
     return isCollided;
   }
 
@@ -266,11 +270,5 @@ class Ghost {
 let updateGhosts = () => {
   for (let i = 0; i < ghosts.length; i++) {
     ghosts[i].moveProcess();
-  }
-};
-
-let drawGhosts = () => {
-  for (let i = 0; i < ghosts.length; i++) {
-    ghosts[i].draw();
   }
 };
