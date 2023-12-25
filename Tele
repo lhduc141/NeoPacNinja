@@ -1,0 +1,169 @@
+public class Teleporter extends JavaPlugin
+{
+
+	HashMap<String, Long> cooldowns = new HashMap<String, Long>();
+
+	@Override
+	public void onEnable()
+	{
+
+	}	//end of public void
+
+	@Override
+	public void onDisable()
+	{
+
+	}	// end of public void
+
+	@SuppressWarnings("deprecation")
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		int cooldownTime = 750; // Get number of seconds from wherever you want
+		if(cooldowns.containsKey(sender.getName()))
+		{
+			long secondsLeft = ((cooldowns.get(sender.getName())/1000)+cooldownTime) - (System.currentTimeMillis()/1000);
+			if(secondsLeft>0)
+			{
+				// Still cooling down
+				sender.sendMessage(ChatColor.DARK_RED + "You can't use that commands for another "+ ChatColor.BOLD + secondsLeft + ChatColor.DARK_RED +" seconds!");
+				return true;
+			}
+		}
+		// No cooldown found or cooldown has expired, save new cooldown
+
+		if (cmd.getName().equalsIgnoreCase("teleportme") && sender instanceof Player)
+		{
+			Player player = (Player) sender;																											
+			// finding player
+			Location originalLocation = player.getLocation();																							
+			// finding players location
+			int a = originalLocation.getBlockX();
+			int b = originalLocation.getBlockY();
+			int c = originalLocation.getBlockZ();
+			World world = player.getWorld();
+			World.Environment worldcheck = player.getWorld().getEnvironment();
+			if(worldcheck == World.Environment.NORMAL)
+			{
+
+				Random random = new Random();																												
+				// declaring random
+				//Location Maxbounds = null;
+				Location teleportLocation = null;																											
+				// declaring teleport location empty
+				boolean isOnLand = false;																													
+				// setting is on land to false
+				boolean isSafe = false;																														
+				// setting can breathe to false
+				boolean canBreathe = false;
+				boolean biomeCheck = false;
+
+				//int max_coords = config.getInt("max-coords");
+				while(isSafe == false)
+				{
+					int max_coords = 10000;
+					int x = random.nextInt(max_coords * 2) - max_coords;																					
+					// setting x coordinate to random
+					int y = 340;																															
+					// setting y coordinate to 75
+					int z = random.nextInt(max_coords * 2) - max_coords;																					
+					// setting z coordinate to random
+					int H = y + 2;
+
+					while (isOnLand == false)
+					{
+						teleportLocation = new Location(player.getWorld(), x, y, z);																		
+						// setting teleport location
+						PlayerHeadLocation = new Location(player.getWorld(), x, H, z);																		
+						// setting teleport location
+						teleportLocation.getWorld().loadChunk(teleportLocation.getChunk());
+
+						if (teleportLocation.getBlock().getType() != Material.AIR && teleportLocation.getBlock().getType() != Material.STATIONARY_WATER)
+						{
+							isOnLand = true;																												
+							// setting isonland to true			
+						}	//end of if statement
+						else
+						{
+							y--;																															
+							// lower y coordinate
+							H--;																															
+							// lower H location
+						}
+					}	// end of while location test
+
+					Biome biome = world.getBiome(teleportLocation.getBlockX(), teleportLocation.getBlockZ());
+					if (teleportLocation.getBlock().getType() != Material.LAVA && teleportLocation.getBlock().getType() != Material.STATIONARY_LAVA && teleportLocation.getBlock().getType() != Material.CACTUS)
+					{
+						isSafe = true;																														
+						// setting isonland to true			
+					}	//end of if statement
+					if(PlayerHeadLocation.getBlock().getType() == Material.AIR)
+					{
+						canBreathe = true;
+					}
+					if(biome != Biome.DEEP_OCEAN && biome != Biome.OCEAN)
+					{
+						biomeCheck = true;
+					}
+
+				}	//end of isSafe while
+
+				if(canBreathe == true && biomeCheck == true)
+				{
+					//teleportLocation.getWorld().loadChunk(teleportLocation.getChunk());
+					final Location PlayerHeadLocationTwo = PlayerHeadLocation;
+					//Location checkLocation = player.getLocation();																							
+					// finding players location
+					player.sendMessage(ChatColor.RED + "Please stand still for 3 seconds," + ChatColor.GOLD + " You will be teleported shortly!");
+
+					Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new BukkitRunnable()
+					{
+
+						@Override
+						public void run()
+						{
+							// TODO Auto-generated method stub
+							int d = player.getLocation().getBlockX();
+							int e = player.getLocation().getBlockY();
+							int f = player.getLocation().getBlockZ();
+
+							if(d == a && e== b && f == c)
+							{
+									/*player.sendMessage("Block X Original: " + a);
+									player.sendMessage("Block X MoveTest: " + d);
+									player.sendMessage("Block Y Original: " + b);
+									player.sendMessage("Block Y MoveTest: " + e);
+									player.sendMessage("Block Z Original: " + c);
+									player.sendMessage("Block Z MoveTest: " + f);*/
+
+								player.teleport(PlayerHeadLocationTwo);																											
+								// teleporting player to random location
+								player.sendMessage(ChatColor.GREEN + "You have been teleported " + (int)PlayerHeadLocationTwo.distance(originalLocation) + " blocks away");		
+								// telling player how far they teleported
+								cooldowns.put(sender.getName(), System.currentTimeMillis());
+							}
+							else
+							{
+								player.sendMessage(ChatColor.DARK_RED + "You cannot move after issuing the random teleport command!");
+							}
+						}	// end of public void run()
+					}, 60);	// end of bukkit.getScheduler
+
+				} //end of if
+				else
+				{
+					player.sendMessage(ChatColor.GOLD + "A safe location " + ChatColor.RED + "COULD NOT be found!" + ChatColor.GOLD + " Please try again!");
+				}
+			}	// end of world check
+			else
+			{
+				player.sendMessage(ChatColor.RED + "Hey! You can't do that here!");
+			}
+			return true;
+		}	
+
+		return false;
+
+	}	
+
+}
