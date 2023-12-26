@@ -22,12 +22,12 @@ class Ghost {
     this.imageHeight = imageHeight;
     this.imageWidth = imageWidth;
     this.range = range;
-    this.randomTargetIndex = parseInt(Math.random() * 4);
-    this.target = randomTargetsForGhosts[this.randomTargetIndex];
 
     this.hidePositionX = oneBlockSize * 2;
-;
+    this.hidePositionY = oneBlockSize * 2;
 
+    this.randomTargetIndex = parseInt(Math.random() * 4);
+    this.target = randomTargetsForGhosts[this.randomTargetIndex];
     setInterval(() => {
       this.changeRandomDirection();
     }, 10000);
@@ -38,21 +38,18 @@ class Ghost {
       pacman.getMapX() === this.hidePositionX &&
       pacman.getMapY() === this.hidePositionY
     ) {
-      console.log('Pacman is at hide position. Ghost cannot recognize.');
+      console.log("Pacman is at hide position. Ghost cannot recognize.");
       return false;
     }
     let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
     let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
     if (
-      (Math.sqrt(xDistance * xDistance + yDistance * yDistance) <= this.range) 
-      // &&
-      // pacman.getMapX != oneBlockSize * 2 && pacman.getMapY != oneBlockSize * 2
+      Math.sqrt(xDistance * xDistance + yDistance * yDistance) <= this.range
     ) {
       return true;
     }
     return false;
   }
-  
 
   changeRandomDirection() {
     let addition = 1;
@@ -61,13 +58,6 @@ class Ghost {
   }
 
   moveProcess() {
-    // if (
-    //   pacman.getMapX() == oneBlockSize * 2 &&
-    //   pacman.getMapY() == oneBlockSize * 2
-    // ) {
-    //   isInrange = false;
-    //   console.log("hiding");
-    // }
     if (this.isInRange()) {
       this.target = pacman;
     } else {
@@ -130,6 +120,10 @@ class Ghost {
         parseInt(this.x / oneBlockSize + 0.9999)
       ] == 1
     ) {
+      isCollided = true;
+    }
+
+    if (this.x < 0 || this.x > map[0].length * oneBlockSize) {
       isCollided = true;
     }
     return isCollided;
