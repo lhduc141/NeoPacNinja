@@ -13,7 +13,7 @@ class Pacman {
             this.changeAnimation();
         }, 100);
     }
-
+//test
     moveProcess() {
         let cellX = Math.floor(this.x / oneBlockSize);
         let cellY = Math.floor(this.y / oneBlockSize);
