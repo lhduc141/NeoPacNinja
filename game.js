@@ -49,7 +49,7 @@ let ghostImageLocations = [
 // 7: finish
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
   [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
   [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1],
   [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
@@ -57,7 +57,7 @@ let map = [
   [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
   [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1],
-  [1, 7, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
   [1, 2, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
   [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
   [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
@@ -149,6 +149,9 @@ let update = () => {
     onGhostCollision();
   }
   checkKey();
+  if (isPass()) {
+    missionSuccess();
+  }
   //   checkSpeedUpTime();
 };
 
@@ -201,11 +204,20 @@ let gameOver = () => {
   drawGameOver();
   clearInterval(gameInterval);
 };
+let gamePass = () => {
+  drawGamePass();
+  clearInterval(gameInterval);
+};
 
 let drawGameOver = () => {
   canvasContext.font = "40px Emulogic";
   canvasContext.fillStyle = "white";
   canvasContext.fillText("Game Over!", 110, 240);
+};
+let drawGamePass = () => {
+  canvasContext.font = "40px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("NGU!", 110, 240);
 };
 
 let drawRemainingLives = () => {
@@ -329,6 +341,20 @@ let createGhosts = () => {
 let checkKey = () => {
   if (keys == 0) {
     map[1][1] = 7;
+  }
+};
+let isPass = () => {
+  if (map[1][1] == 7 && pacman.x == 20 && pacman.y == 20) {
+    return true;
+  }
+  return false;
+};
+let missionSuccess = () => {
+  lives--;
+  restartPacmanAndGhosts();
+  if (lives == 0) {
+    clearInterval(gameInterval);
+    gamePass();
   }
 };
 

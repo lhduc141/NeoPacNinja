@@ -54,6 +54,13 @@ class Pacman {
           map[i][j] = 2;
           keys--;
         }
+        if (
+          map[1][1] == 7 &&
+          pacman.getMapX() == 20 &&
+          pacman.getMapY() == 20
+        ) {
+          lives = 0;
+        }
       }
 
       if (speedBoostDuration > 0) {
