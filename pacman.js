@@ -53,6 +53,7 @@ class Pacman {
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           keys--;
+
         }
       }
 

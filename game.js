@@ -339,7 +339,7 @@ gameLoop();
 window.addEventListener("keydown", (event) => {
   let k = event.keyCode;
 
-  setTimeout(() => {
+    setTimeout(() => {
     if (k == 37 || k == 65) {
       //left
       pacman.nextDirection = DIRECTION_LEFT;
@@ -355,3 +355,4 @@ window.addEventListener("keydown", (event) => {
     }
   }, 1);
 });
+
