@@ -54,11 +54,7 @@ class Pacman {
           map[i][j] = 2;
           keys--;
         }
-        if (
-          map[1][1] == 7 &&
-          pacman.getMapX() == 20 &&
-          pacman.getMapY() == 20
-        ) {
+        if (map[1][1] == 7 && this.getMapX() == 20 && this.getMapY() == 20) {
           lives = 0;
         }
       }
@@ -70,6 +66,51 @@ class Pacman {
         this.speed = this.speed = oneBlockSize / 10;
       }
     }
+  }
+
+  teleport() {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[0].length; j++) {
+        if (map[i][j] == 5 && this.getMapX() == j && this.getMapY() == i) {
+          if (teleStatus == true)
+            switch (true) {
+              case i == 4 && j == 4:
+                this.x = 17 * oneBlockSize;
+                this.y = 19 * oneBlockSize;
+                console.log("tele 1");
+                this.countDownTele();
+                break;
+              case i == 19 && j == 17:
+                this.x = 4 * oneBlockSize;
+                this.y = 4 * oneBlockSize;
+                console.log("tele 2");
+                this.countDownTele();
+                break;
+            }
+          // if (i == 4 && j == 4) {
+          //   this.x = 17 * oneBlockSize;
+          //   this.y = 19 * oneBlockSize;
+          //   console.log("tele 1");
+          //   teleStatus = false;
+          //   break;
+          // }
+          // if (i == 19 && j == 17) {
+          //   this.x = 4 * oneBlockSize;
+          //   this.y = 4 * oneBlockSize;
+          //   console.log("tele 2");
+          //   teleStatus = false;
+          //   break;
+          // }
+        }
+      }
+    }
+  }
+  countDownTele() {
+    teleStatus = false;
+    setTimeout(() => {
+      teleStatus = true;
+    }, 1500);
+    // this.countDownTele();
   }
 
   moveBackwards() {

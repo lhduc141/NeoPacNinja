@@ -23,6 +23,9 @@ let fps = 30;
 let pacman;
 let oneBlockSize = 20;
 let foodColor = "#FEB897";
+// let countDownTelePort = 0;
+let teleStatus = true;
+let teleCountDownTime = 3000;
 
 let score = 0;
 let keys = 3;
@@ -74,18 +77,18 @@ let map = [
 ];
 
 const teleport_positions = [
-  {
-    origin: [-1, 10],
-    target: [20, 10],
-  },
-  {
-    origin: [1, 15],
-    target: [20, 10],
-  },
-  {
-    origin: [20, 10],
-    target: [0, 10],
-  },
+  // {
+  //   origin: [-1, 10],
+  //   target: [20, 10],
+  // },
+  // {
+  //   origin: [1, 15],
+  //   target: [20, 10],
+  // },
+  // {
+  //   origin: [20, 10],
+  //   target: [0, 10],
+  // },
 ];
 
 let randomTargetsForGhosts = [
@@ -142,6 +145,7 @@ let update = () => {
   // todo
   pacman.moveProcess();
   pacman.eat();
+  pacman.teleport();
   for (let i = 0; i < ghosts.length; i++) {
     ghosts[i].moveProcess();
   }
