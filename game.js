@@ -27,24 +27,14 @@ let keys = 3;
 let lives = 1;
 
 let ghosts = [];
-let ghostCount = 4;
+let ghostCount = 1;
 let ghostImageLocations = [
-    { x: 0, y: 0 },
+    { x: 1, y: 0 },
     { x: 176, y: 0 },
-    { x: 0, y: 121 },
+    { x: 1, y: 121 },
     { x: 176, y: 121 },
 ];
 
-// we now create the map of the walls,
-// if 1 wall, if 0 not wall
-// 21 columns // 23 rows
-// 1: walls
-// 2: grounds
-// 3:
-// 4: speed
-// 5: tunnel
-// 6: keys
-// 7: finish
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
@@ -310,20 +300,44 @@ let drawWalls = () => {
 
 let createGhosts = () => {
     ghosts = [];
-    for (let i = 0; i < ghostCount * 2; i++) {
-        let newGhost = new Ghost(
-            9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
-            10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+    for (let i = 0; i < ghostCount ; i++) {
+        let newGhost1 = new Ghost(
+            9 * oneBlockSize ,
+            1 * oneBlockSize ,
             oneBlockSize,
             oneBlockSize,
             pacman.speed / 2,
-            ghostImageLocations[i % 4].x,
-            ghostImageLocations[i % 4].y,
+            ghostImageLocations[0].x,
+            ghostImageLocations[0].y,
             124,
             116,
             6 + i
         );
-        ghosts.push(newGhost);
+        let newGhost2 = new Ghost(
+            9 * oneBlockSize ,
+            10 * oneBlockSize ,
+            oneBlockSize,
+            oneBlockSize,
+            pacman.speed / 2,
+            ghostImageLocations[1].x,
+            ghostImageLocations[1].y,
+            124,
+            116,
+            6 + i
+        );
+        let newGhost3 = new Ghost(
+            13 * oneBlockSize ,
+            21 * oneBlockSize ,
+            oneBlockSize,
+            oneBlockSize,
+            pacman.speed / 2,
+            ghostImageLocations[2].x,
+            ghostImageLocations[2].y,
+            124,
+            116,
+            6 + i
+        );
+        ghosts.push(newGhost1, newGhost2, newGhost3);
     }
 };
 
