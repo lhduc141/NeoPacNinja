@@ -16,10 +16,13 @@ const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 
+const canvasWidth = canvas.width;
+const canvasHeight = canvas.height;
+
 // Game variables
 let fps = 30;
 let pacman;
-let oneBlockSize = 20;
+let oneBlockSize = 30;
 let foodColor = "#FEB897";
 
 let score = 0;
@@ -196,7 +199,12 @@ let gameOver = () => {
 let drawGameOver = () => {
     canvasContext.font = "40px Emulogic";
     canvasContext.fillStyle = "white";
-    canvasContext.fillText("Game Over!", 110, 240);
+    let text = "Game Over!"
+    let metrics = canvasContext.measureText(text);
+    let textWidth = metrics.width
+    let textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    console.log("Height", textHeight)
+    canvasContext.fillText(text, canvasWidth / 2 - textWidth / 2, canvasWidth / 2 + textHeight / 2);
 };
 
 let drawRemainingLives = () => {
