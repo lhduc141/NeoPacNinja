@@ -54,13 +54,17 @@ class Pacman {
           map[i][j] = 2;
           keys--;
         }
-        if (map[1][1] == 7 && this.getMapX() == 20 && this.getMapY() == 20) {
-          lives = 0;
-        }
+        // if (map[1][1] == 7 && this.getMapX() == 20 && this.getMapY() == 20) {
+        //   // lives = 0;
+        //   restartPacmanAndGhosts();
+        //   clearInterval(gameInterval);
+        //   gamePass();
+        // }
       }
 
       if (speedBoostDuration > 0) {
-        speedBoostDuration -= 1; // Assuming deltaTime is the time elapsed since the last frame
+        speedBoostDuration -= 1;
+        // Assuming deltaTime is the time elapsed since the last frame
       } else {
         // Reset speed to the default value when the boost duration is over
         this.speed = this.speed = oneBlockSize / 10;
@@ -72,35 +76,27 @@ class Pacman {
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[0].length; j++) {
         if (map[i][j] == 5 && this.getMapX() == j && this.getMapY() == i) {
-          if (teleStatus == true)
+          if (teleStatus == true) {
             switch (true) {
               case i == 4 && j == 4:
                 this.x = 17 * oneBlockSize;
                 this.y = 19 * oneBlockSize;
-                console.log("tele 1");
-                this.countDownTele();
                 break;
               case i == 19 && j == 17:
                 this.x = 4 * oneBlockSize;
                 this.y = 4 * oneBlockSize;
-                console.log("tele 2");
-                this.countDownTele();
+                break;
+              case i == 2 && j == 10:
+                this.x = 9 * oneBlockSize;
+                this.y = 9 * oneBlockSize;
+                break;
+              case i == 9 && j == 9:
+                this.x = 10 * oneBlockSize;
+                this.y = 3 * oneBlockSize;
                 break;
             }
-          // if (i == 4 && j == 4) {
-          //   this.x = 17 * oneBlockSize;
-          //   this.y = 19 * oneBlockSize;
-          //   console.log("tele 1");
-          //   teleStatus = false;
-          //   break;
-          // }
-          // if (i == 19 && j == 17) {
-          //   this.x = 4 * oneBlockSize;
-          //   this.y = 4 * oneBlockSize;
-          //   console.log("tele 2");
-          //   teleStatus = false;
-          //   break;
-          // }
+            this.countDownTele();
+          }
         }
       }
     }
@@ -242,5 +238,12 @@ class Pacman {
       this.height
     );
     canvasContext.restore();
+  }
+
+  isPass() {
+    if (map[1][1] == 7 && this.x == 20 && this.y == 20) {
+      return true;
+    }
+    return false;
   }
 }

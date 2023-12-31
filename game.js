@@ -17,13 +17,17 @@ const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 const timeSpeed = 3;
 
+//Check status to run game or not
+let gameStartStatus = true;
+let gameCanavsStatus = false;
+let gameOverStatus = false;
+
 // Game variables
 let speedBoostDuration = 0;
 let fps = 30;
 let pacman;
 let oneBlockSize = 20;
 let foodColor = "#FEB897";
-// let countDownTelePort = 0;
 let teleStatus = true;
 let teleCountDownTime = 3000;
 
@@ -51,30 +55,71 @@ let ghostImageLocations = [
 // 6: keys
 // 7: finish
 let map = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
-  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1],
-  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1],
-  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1],
-  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
+
+let startGame = () => {
+  var startDiv = document.getElementById("start");
+  var gameCanvas = document.getElementById("canvas");
+  // var gameOver = document.getElementById("game-over");
+
+  startDiv.style.display = "none";
+  gameCanvas.style.display = "block";
+
+  start();
+};
+
+function start() {
+  gameCanavsStatus = true;
+  createNewPacman();
+  createGhosts();
+  gameLoop();
+}
+
+let gameOver = () => {
+  var startDiv = document.getElementById("start");
+  var gameCanvas = document.getElementById("canvas");
+  var gameOver = document.getElementById("game-over");
+
+  // gameOverFail();
+  gameCanavsStatus = false;
+  drawGameOver();
+  clearInterval(gameInterval);
+
+  setTimeout(() => {
+    startDiv.style.display = "none";
+    gameCanvas.style.display = "none";
+    gameOver.style.display = "block";
+  }, 3000);
+};
+
+let gamePass = () => {
+  drawGamePass();
+  clearInterval(gameInterval);
+};
 
 const teleport_positions = [
   // {
@@ -112,11 +157,13 @@ let createNewPacman = () => {
 };
 
 let gameLoop = () => {
-  update();
-  if (lives == 0) {
-    return;
+  if (gameCanavsStatus) {
+    update();
+    if (lives == 0) {
+      return;
+    }
+    draw();
   }
-  draw();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -151,6 +198,7 @@ let update = () => {
   }
   if (pacman.checkGhostCollision(ghosts)) {
     onGhostCollision();
+    gameOver();
   }
   checkKey();
   if (isPass()) {
@@ -204,14 +252,10 @@ let createRect = (x, y, width, height, img) => {
   canvasContext.fillRect(x, y, width, height);
 };
 
-let gameOver = () => {
-  drawGameOver();
-  clearInterval(gameInterval);
-};
-let gamePass = () => {
-  drawGamePass();
-  clearInterval(gameInterval);
-};
+// let gameOverFail = () => {
+//   drawGameOver();
+//   clearInterval(gameInterval);
+// };
 
 let drawGameOver = () => {
   canvasContext.font = "40px Emulogic";
@@ -347,12 +391,7 @@ let checkKey = () => {
     map[1][1] = 7;
   }
 };
-let isPass = () => {
-  if (map[1][1] == 7 && pacman.x == 20 && pacman.y == 20) {
-    return true;
-  }
-  return false;
-};
+
 let missionSuccess = () => {
   lives--;
   restartPacmanAndGhosts();
@@ -362,9 +401,9 @@ let missionSuccess = () => {
   }
 };
 
-createNewPacman();
-createGhosts();
-gameLoop();
+// createNewPacman();
+// createGhosts();
+// gameLoop();
 
 window.addEventListener("keydown", (event) => {
   let k = event.keyCode;
