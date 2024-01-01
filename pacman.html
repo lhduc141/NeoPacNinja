@@ -5,32 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pacman</title>
+
+    <link rel="stylesheet" href="/main.css" />
   </head>
 
-  <body
-    style="
-      margin: 0;
-      background-color: black;
-      width: 100%;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    "
-  >
+  <body>
     <div id="start" style="display: block">
       <a href="#" onclick="startGame()" style="color: white">Start Game</a>
     </div>
 
-    <canvas
-      id="canvas"
-      width="630"
-      height="750"
-      style="border: 1px solid white; display: none"
-    ></canvas>
+    <canvas id="canvas" width="630" height="750"></canvas>
 
-    <div style="display: none">
+    <div id="addImg">
       <img id="animation" src="assets/animations.gif" width="140" height="20" />
       <img id="ghosts" src="assets/ghost.png" width="140" height="20" />
       <img id="walls" src="assets/walls.png" width="140" height="20" />
@@ -41,10 +27,21 @@
       <img id="finish" src="assets/finish.png" width="140" height="20" />
     </div>
 
-    <div id="game-over" style="display: none">
+    <div id="game-over">
       <h1>Game Over</h1>
       <a href="#" onclick="startGame()">Restart</a>
     </div>
+
+    <!-- <div class="form-group" style="display: block">
+      <input
+        type="text"
+        class="form-control"
+        name=""
+        id=""
+        aria-describedby="helpId"
+        placeholder=""
+      />
+    </div> -->
 
     <script src="ghost.js"></script>
     <script src="pacman.js"></script>
