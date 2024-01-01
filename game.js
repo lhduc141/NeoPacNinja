@@ -19,6 +19,8 @@ const DIRECTION_BOTTOM = 1;
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+canvas.style.margin = 0;
+
 //Check status to run game or not
 let gameStartStatus = true;
 let gameCanavsStatus = true;

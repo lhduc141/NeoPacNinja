@@ -8,13 +8,27 @@
   </head>
 
   <body
-    style="margin: 0; background-color: black; width: 100%; text-align: center"
+    style="
+      margin: 0;
+      background-color: black;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    "
   >
     <div id="start" style="display: block">
-      <a href="#" onclick="startGame()" style="color: white">Star Game</a>
+      <a href="#" onclick="startGame()" style="color: white">Start Game</a>
     </div>
 
-    <canvas id="canvas" width="630" height="750" style="display: none"></canvas>
+    <canvas
+      id="canvas"
+      width="630"
+      height="750"
+      style="border: 1px solid white; display: none"
+    ></canvas>
 
     <div style="display: none">
       <img id="animation" src="assets/animations.gif" width="140" height="20" />
