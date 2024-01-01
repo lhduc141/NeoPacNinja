@@ -19,11 +19,18 @@ const DIRECTION_BOTTOM = 1;
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+//Check status to run game or not
+let gameStartStatus = true;
+let gameCanavsStatus = false;
+let gameOverStatus = false;
+
 // Game variables
 let fps = 30;
 let pacman;
 let oneBlockSize = 30;
 let foodColor = "#FEB897";
+let teleStatus = true;
+let teleCountDownTime = 3000;
 
 let score = 0;
 let keys = 3;
@@ -39,44 +46,86 @@ let ghostImageLocations = [
 ];
 
 let map = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
-    [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1],
-    [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1],
-    [1, 7, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1],
-    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
+
 ];
 
+let startGame = () => {
+  var startDiv = document.getElementById("start");
+  var gameCanvas = document.getElementById("canvas");
+  // var gameOver = document.getElementById("game-over");
+
+  startDiv.style.display = "none";
+  gameCanvas.style.display = "block";
+
+  start();
+};
+
+function start() {
+  gameCanavsStatus = true;
+  createNewPacman();
+  createGhosts();
+  gameLoop();
+}
+
+let gameOver = () => {
+  var startDiv = document.getElementById("start");
+  var gameCanvas = document.getElementById("canvas");
+  var gameOver = document.getElementById("game-over");
+
+  // gameOverFail();
+  gameCanavsStatus = false;
+  drawGameOver();
+  clearInterval(gameInterval);
+
+  setTimeout(() => {
+    startDiv.style.display = "none";
+    gameCanvas.style.display = "none";
+    gameOver.style.display = "block";
+  }, 3000);
+};
+
+let gamePass = () => {
+  drawGamePass();
+  clearInterval(gameInterval);
+};
+
 const teleport_positions = [
-    {
-        origin: [-1, 10],
-        target: [20, 10],
-    },
-    {
-        origin: [1, 15],
-        target: [20, 10],
-    },
-    {
-        origin: [20, 10],
-        target: [0, 10],
-    },
+  // {
+  //   origin: [-1, 10],
+  //   target: [20, 10],
+  // },
+  // {
+  //   origin: [1, 15],
+  //   target: [20, 10],
+  // },
+  // {
+  //   origin: [20, 10],
+  //   target: [0, 10],
+  // },
 ];
 
 let randomTargetsForGhosts = [
@@ -100,11 +149,13 @@ let createNewPacman = () => {
 };
 
 let gameLoop = () => {
+  if (gameCanavsStatus) {
     update();
     if (lives == 0) {
-        return;
+      return;
     }
     draw();
+  }
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -130,16 +181,23 @@ let onGhostCollision = () => {
 };
 
 let update = () => {
-    // todo
-    pacman.moveProcess();
-    pacman.eat();
-    for (let i = 0; i < ghosts.length; i++) {
-        ghosts[i].moveProcess();
-    }
-    if (pacman.checkGhostCollision(ghosts)) {
-        onGhostCollision();
-    }
-    checkKey();
+  // todo
+  pacman.moveProcess();
+  pacman.eat();
+  pacman.teleport();
+  for (let i = 0; i < ghosts.length; i++) {
+    ghosts[i].moveProcess();
+  }
+  if (pacman.checkGhostCollision(ghosts)) {
+    onGhostCollision();
+    gameOver();
+  }
+  checkKey();
+  if (isPass()) {
+    missionSuccess();
+  }
+  //   checkSpeedUpTime();
+
 };
 
 let drawFoods = () => {
@@ -196,6 +254,12 @@ let gameOver = () => {
     clearInterval(gameInterval);
 };
 
+// let gameOverFail = () => {
+//   drawGameOver();
+//   clearInterval(gameInterval);
+// };
+
+
 let drawGameOver = () => {
     canvasContext.font = "40px Emulogic";
     canvasContext.fillStyle = "white";
@@ -205,6 +269,11 @@ let drawGameOver = () => {
     let textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
     console.log("Height", textHeight)
     canvasContext.fillText(text, canvasWidth / 2 - textWidth / 2, canvasWidth / 2 + textHeight / 2);
+};
+let drawGamePass = () => {
+  canvasContext.font = "40px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("NGU!", 110, 240);
 };
 
 let drawRemainingLives = () => {
@@ -355,9 +424,18 @@ let checkKey = () => {
     }
 };
 
-createNewPacman();
-createGhosts();
-gameLoop();
+let missionSuccess = () => {
+  lives--;
+  restartPacmanAndGhosts();
+  if (lives == 0) {
+    clearInterval(gameInterval);
+    gamePass();
+  }
+};
+
+// createNewPacman();
+// createGhosts();
+// gameLoop();
 
 window.addEventListener("keydown", (event) => {
     let k = event.keyCode;

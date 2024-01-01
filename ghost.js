@@ -267,6 +267,7 @@ class Ghost {
           this.width,
           this.height
       );
+
   }
 }
 
@@ -275,3 +276,4 @@ let updateGhosts = () => {
       ghosts[i].moveProcess();
   }
 };
+
