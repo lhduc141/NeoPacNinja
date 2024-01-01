@@ -54,6 +54,15 @@ class Pacman {
           keys--;
         }
       }
+
+      if (speedBoostDuration > 0) {
+        speedBoostDuration -= 1;
+        // Assuming deltaTime is the time elapsed since the last frame
+      } else {
+        // Reset speed to the default value when the boost duration is over
+        this.speed = this.speed = oneBlockSize / 10;
+
+      }
     }
   }
 
