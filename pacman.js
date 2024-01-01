@@ -53,14 +53,7 @@ class Pacman {
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           keys--;
-
         }
-        // if (map[1][1] == 7 && this.getMapX() == 20 && this.getMapY() == 20) {
-        //   // lives = 0;
-        //   restartPacmanAndGhosts();
-        //   clearInterval(gameInterval);
-        //   gamePass();
-        // }
       }
 
       if (speedBoostDuration > 0) {
