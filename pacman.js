@@ -43,71 +43,18 @@ class Pacman {
           map[i][j] = 3;
           score++;
         }
-        //speed up
+        //speed
         if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           this.speed = oneBlockSize / 5;
-          speedBoostDuration = 1200;
         }
         //key
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           keys--;
-
-        }
-        // if (map[1][1] == 7 && this.getMapX() == 20 && this.getMapY() == 20) {
-        //   // lives = 0;
-        //   restartPacmanAndGhosts();
-        //   clearInterval(gameInterval);
-        //   gamePass();
-        // }
-      }
-
-      if (speedBoostDuration > 0) {
-        speedBoostDuration -= 1;
-        // Assuming deltaTime is the time elapsed since the last frame
-      } else {
-        // Reset speed to the default value when the boost duration is over
-        this.speed = this.speed = oneBlockSize / 10;
-      }
-    }
-  }
-
-  teleport() {
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[0].length; j++) {
-        if (map[i][j] == 5 && this.getMapX() == j && this.getMapY() == i) {
-          if (teleStatus == true) {
-            switch (true) {
-              case i == 4 && j == 4:
-                this.x = 17 * oneBlockSize;
-                this.y = 19 * oneBlockSize;
-                break;
-              case i == 19 && j == 17:
-                this.x = 4 * oneBlockSize;
-                this.y = 4 * oneBlockSize;
-                break;
-              case i == 2 && j == 10:
-                this.x = 9 * oneBlockSize;
-                this.y = 9 * oneBlockSize;
-                break;
-              case i == 9 && j == 9:
-                this.x = 10 * oneBlockSize;
-                this.y = 3 * oneBlockSize;
-                break;
-            }
-            this.countDownTele();
-          }
         }
       }
     }
-  }
-  countDownTele() {
-    teleStatus = false;
-    setTimeout(() => {
-      teleStatus = true;
-    }, 1500);
-    // this.countDownTele();
   }
 
   moveBackwards() {
@@ -239,12 +186,5 @@ class Pacman {
       this.height
     );
     canvasContext.restore();
-  }
-
-  isPass() {
-    if (map[1][1] == 7 && this.x == 20 && this.y == 20) {
-      return true;
-    }
-    return false;
   }
 }
