@@ -77,7 +77,6 @@ let map = [
 let startGame = () => {
   var startDiv = document.getElementById("start");
   var gameCanvas = document.getElementById("canvas");
-  // var gameOver = document.getElementById("game-over");
 
   startDiv.style.display = "none";
   gameCanvas.style.display = "block";
@@ -114,20 +113,7 @@ let gamePass = () => {
   clearInterval(gameInterval);
 };
 
-const teleport_positions = [
-  // {
-  //   origin: [-1, 10],
-  //   target: [20, 10],
-  // },
-  // {
-  //   origin: [1, 15],
-  //   target: [20, 10],
-  // },
-  // {
-  //   origin: [20, 10],
-  //   target: [0, 10],
-  // },
-];
+const teleport_positions = [];
 
 let randomTargetsForGhosts = [
   { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
@@ -166,12 +152,6 @@ let restartPacmanAndGhosts = () => {
   createGhosts();
 };
 
-// for (let i = 0; i < map.length; i++) {
-//     for (let j = 0; j < map[0].length; j++) {
-//         map[i][j] = 2;
-//     }
-// }
-
 let onGhostCollision = () => {
   lives--;
   restartPacmanAndGhosts();
@@ -194,7 +174,7 @@ let update = () => {
     gameOver();
   }
   checkKey();
-  if (isPass()) {
+  if (pacman.isPass()) {
     missionSuccess();
   }
   //   checkSpeedUpTime();
