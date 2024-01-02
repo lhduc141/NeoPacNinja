@@ -7,17 +7,25 @@ body{
     justify-content: center;
     align-items: center;
     height: 100vh;
+
+    font-family:  'Pixelify Sans', sans-serif;
+}
+h1, a{
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+a{
+    padding: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 30px;
+    display: block;
 }
 /* ----------------- */
 #start{
     display: block;
 }
-#start a{
-    text-decoration: none;
-    font-family:  'Pixelify Sans', sans-serif;
-    font-size: 40px;
-}
-
-#canvas,#addImg, #game-over{
+#canvas,#addImg, #game-over, #game-pass{
     display: none;
 }

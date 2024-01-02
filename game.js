@@ -22,9 +22,15 @@ const canvasHeight = canvas.height;
 canvas.style.margin = 0;
 
 //Check status to run game or not
-let gameStartStatus = true;
-let gameCanavsStatus = true;
-let gameOverStatus = true;
+let startLvlStatus = false;
+let canvasLvlStatus = false;
+let failLvlStatus = false;
+let completLvlStatus = false;
+
+let startLvl = document.getElementById("start");
+let canvasLvl = document.getElementById("canvas");
+let failLvl = document.getElementById("game-over");
+let completLvl = document.getElementById("game-pass");
 
 // Game variables
 let fps = 30;
@@ -49,7 +55,7 @@ let ghostImageLocations = [
   { x: 176, y: 121 },
 ];
 
-let map = [
+const map = [
   // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
   [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
@@ -76,44 +82,89 @@ let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
 
+const baseMap = [
+  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
+];
+
+//start game status
 let startGame = () => {
-  var startDiv = document.getElementById("start");
-  var gameCanvas = document.getElementById("canvas");
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "block";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
 
-  startDiv.style.display = "none";
-  gameCanvas.style.display = "block";
+  canvasLvlStatus = true;
+  failLvlStatus = false;
 
-  start();
+  score = 0;
+  keys = 3;
+  lives = 1;
+
+  if (failLvlStatus) {
+    start();
+  } else {
+    start();
+  }
 };
-
-function start() {
-  gameCanavsStatus = true;
+let start = () => {
   createNewPacman();
   createGhosts();
   gameLoop();
-}
+};
 
+//game over status
 let gameOver = () => {
-  var startDiv = document.getElementById("start");
-  var gameCanvas = document.getElementById("canvas");
-  var gameOver = document.getElementById("game-over");
+  canvasLvlStatus = false;
+  failLvlStatus = true;
 
-  // gameOverFail();
-  gameCanavsStatus = false;
   drawGameOver();
   clearInterval(gameInterval);
 
   setTimeout(() => {
-    startDiv.style.display = "none";
-    gameCanvas.style.display = "none";
-    gameOver.style.display = "block";
+    startLvl.style.display = "none";
+    canvasLvl.style.display = "none";
+    failLvl.style.display = "block";
+    completLvl.style.display = "none";
   }, 3000);
 };
+let resetGame = () => {
+  addMap();
+  deleteGhost();
+  deletePacman();
 
-let gamePass = () => {
-  drawGamePass();
-  clearInterval(gameInterval);
+  startGame();
 };
+let returnMenu = () => {
+  startLvl.style.display = "block";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+};
+
+let gamePass = () => {};
 
 const teleport_positions = [];
 
@@ -131,14 +182,22 @@ let createNewPacman = () => {
   pacman = new Pacman(
     oneBlockSize,
     oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 5
+    oneBlockSize * 1.5,
+    oneBlockSize * 1.5,
+    oneBlockSize / 2
+  );
+};
+let deletePacman = () => {
+  canvasContext.clearRect(
+    pacman.x - pacman.radius,
+    pacman.y - pacman.radius,
+    pacman.radius * 2,
+    pacman.radius * 2
   );
 };
 
 let gameLoop = () => {
-  if (gameCanavsStatus) {
+  if (canvasLvlStatus) {
     update();
     if (lives == 0) {
       return;
@@ -165,6 +224,7 @@ let onGhostCollision = () => {
 
 let update = () => {
   // todo
+  console.log("ghostCount: " + ghostCount);
   pacman.moveProcess();
   pacman.eat();
   pacman.teleport();
@@ -241,6 +301,8 @@ let drawGameOver = () => {
     canvasWidth / 2 - textWidth / 2,
     canvasWidth / 2 + textHeight / 2
   );
+
+  // document.getElementById("game-over").addEventListener("click", resetGame);
 };
 let drawGamePass = () => {
   canvasContext.font = "40px Emulogic";
@@ -389,6 +451,9 @@ let createGhosts = () => {
     ghosts.push(newGhost1, newGhost2, newGhost3);
   }
 };
+let deleteGhost = () => {
+  ghosts.length = 0;
+};
 
 let checkKey = () => {
   if (keys == 0) {
@@ -397,11 +462,19 @@ let checkKey = () => {
 };
 
 let missionSuccess = () => {
+  var completed = document.getElementById("game-pass");
   lives--;
   restartPacmanAndGhosts();
   if (lives == 0) {
     clearInterval(gameInterval);
     gamePass();
+  }
+};
+
+let addMap = () => {
+  map.length = 0;
+  for (let i = 0; i < baseMap.length; i++) {
+    map.push([...baseMap[i]]);
   }
 };
 
