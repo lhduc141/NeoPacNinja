@@ -28,6 +28,8 @@ let failLvlStatus = false;
 let completLvlStatus = false;
 
 let startLvl = document.getElementById("start");
+let tutorial = document.getElementById("tutorial");
+let backToMenu = document.getElementById("back");
 let canvasLvl = document.getElementById("canvas");
 let failLvl = document.getElementById("game-over");
 let completLvl = document.getElementById("game-pass");
@@ -115,17 +117,14 @@ let startGame = () => {
   canvasLvl.style.display = "block";
   failLvl.style.display = "none";
   completLvl.style.display = "none";
-
   canvasLvlStatus = true;
-  failLvlStatus = false;
-
-  score = 0;
-  keys = 3;
-  lives = 1;
 
   if (failLvlStatus) {
+    addMap(map, baseMap);
     start();
+    failLvlStatus = false;
   } else {
+    addMap(map, baseMap);
     start();
   }
 };
@@ -135,12 +134,23 @@ let start = () => {
   gameLoop();
 };
 
+//Tutorial
+let tutorialRule = () => {
+  tutorial.style.display = "block";
+  startLvl.style.display = "none";
+};
+let back = () => {
+  tutorial.style.display = "none";
+  startLvl.style.display = "block";
+};
+
 //game over status
 let gameOver = () => {
   canvasLvlStatus = false;
   failLvlStatus = true;
 
   drawGameOver();
+  // restartPacmanAndGhosts();
   clearInterval(gameInterval);
 
   setTimeout(() => {
@@ -151,10 +161,7 @@ let gameOver = () => {
   }, 3000);
 };
 let resetGame = () => {
-  addMap();
   deleteGhost();
-  deletePacman();
-
   startGame();
 };
 let returnMenu = () => {
@@ -185,14 +192,6 @@ let createNewPacman = () => {
     oneBlockSize * 1.5,
     oneBlockSize * 1.5,
     oneBlockSize / 2
-  );
-};
-let deletePacman = () => {
-  canvasContext.clearRect(
-    pacman.x - pacman.radius,
-    pacman.y - pacman.radius,
-    pacman.radius * 2,
-    pacman.radius * 2
   );
 };
 
@@ -295,7 +294,7 @@ let drawGameOver = () => {
   let textWidth = metrics.width;
   let textHeight =
     metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-  console.log("Height", textHeight);
+  // console.log("Height", textHeight);
   canvasContext.fillText(
     text,
     canvasWidth / 2 - textWidth / 2,
@@ -471,7 +470,7 @@ let missionSuccess = () => {
   }
 };
 
-let addMap = () => {
+let addMap = (map, baseMap) => {
   map.length = 0;
   for (let i = 0; i < baseMap.length; i++) {
     map.push([...baseMap[i]]);
