@@ -43,25 +43,16 @@ class Pacman {
           map[i][j] = 3;
           score++;
         }
-        //speed up
+        //speed
         if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           this.speed = oneBlockSize / 5;
-          speedBoostDuration = 1200;
         }
         //key
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
           keys--;
-
         }
-      }
-
-      if (speedBoostDuration > 0) {
-        speedBoostDuration -= 1; // Assuming deltaTime is the time elapsed since the last frame
-      } else {
-        // Reset speed to the default value when the boost duration is over
-        this.speed = this.speed = oneBlockSize / 10;
       }
     }
   }
@@ -178,7 +169,7 @@ class Pacman {
       this.x + oneBlockSize / 2,
       this.y + oneBlockSize / 2
     );
-    canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
+    // canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
     canvasContext.translate(
       -this.x - oneBlockSize / 2,
       -this.y - oneBlockSize / 2
