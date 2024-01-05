@@ -9,7 +9,8 @@ class Ghost {
         imageY,
         imageWidth,
         imageHeight,
-        range
+        range,
+        default_pos
     ) {
         this.x = x;
         this.y = y;
@@ -24,6 +25,9 @@ class Ghost {
         this.range = range;
         this.randomTargetIndex = parseInt(Math.random() * 4);
         this.target = randomTargetsForGhosts[this.randomTargetIndex];
+        this.default_pos = default_pos
+        this.default_pos_index = 0;
+        this.target = this.default_pos[this.default_pos_index];
         setInterval(() => {
             this.changeRandomDirection();
         }, 10000);
@@ -51,7 +55,13 @@ class Ghost {
         if (this.isInRange()) {
             this.target = pacman;
         } else {
-            this.target = randomTargetsForGhosts[this.randomTargetIndex];
+            if (this.default_pos[this.default_pos_index].x - (this.speed / 2 + 1) <= this.x &&
+                this.x <= this.default_pos[this.default_pos_index].x + (this.speed / 2 + 1) && 
+                this.default_pos[this.default_pos_index].y - (this.speed / 2 + 1) <= this.y &&
+                this.y <= this.default_pos[this.default_pos_index].y + (this.speed / 2 + 1)){
+                this.default_pos_index = (this.default_pos_index + 1) % this.default_pos.length;
+            }
+            this.target = this.default_pos[this.default_pos_index]
         }
         this.changeDirectionIfPossible();
         this.moveForwards();

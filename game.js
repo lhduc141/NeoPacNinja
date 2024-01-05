@@ -199,12 +199,17 @@ let gameOver = () => {
 let drawGameOver = () => {
     canvasContext.font = "40px Emulogic";
     canvasContext.fillStyle = "white";
-    let text = "Game Over!"
+    let text = "Game Over!";
     let metrics = canvasContext.measureText(text);
-    let textWidth = metrics.width
-    let textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-    console.log("Height", textHeight)
-    canvasContext.fillText(text, canvasWidth / 2 - textWidth / 2, canvasWidth / 2 + textHeight / 2);
+    let textWidth = metrics.width;
+    let textHeight =
+        metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    console.log("Height", textHeight);
+    canvasContext.fillText(
+        text,
+        canvasWidth / 2 - textWidth / 2,
+        canvasWidth / 2 + textHeight / 2
+    );
 };
 
 let drawRemainingLives = () => {
@@ -308,10 +313,10 @@ let drawWalls = () => {
 
 let createGhosts = () => {
     ghosts = [];
-    for (let i = 0; i < ghostCount ; i++) {
+    // for (let i = 0; i < ghostCount; i++) {
         let newGhost1 = new Ghost(
-            9 * oneBlockSize ,
-            1 * oneBlockSize ,
+            9 * oneBlockSize,
+            1 * oneBlockSize,
             oneBlockSize,
             oneBlockSize,
             pacman.speed / 2,
@@ -319,11 +324,21 @@ let createGhosts = () => {
             ghostImageLocations[0].y,
             124,
             116,
-            6 + i
+            6,
+            [
+                {
+                    x: 4 * oneBlockSize,
+                    y: 1 * oneBlockSize
+                },
+                {
+                    x: 9 * oneBlockSize,
+                    y: 1 * oneBlockSize
+                }
+            ]
         );
         let newGhost2 = new Ghost(
-            9 * oneBlockSize ,
-            10 * oneBlockSize ,
+            9 * oneBlockSize,
+            10 * oneBlockSize,
             oneBlockSize,
             oneBlockSize,
             pacman.speed / 2,
@@ -331,11 +346,31 @@ let createGhosts = () => {
             ghostImageLocations[1].y,
             124,
             116,
-            6 + i
+            6,
+
+            [
+                {
+                    x: 7 * oneBlockSize,
+                    y: 10 * oneBlockSize
+                },
+                {
+                    x: 15 * oneBlockSize,
+                    y: 10 * oneBlockSize
+                },
+                {
+                    x: 15 * oneBlockSize,
+                    y: 15 * oneBlockSize
+                },
+                {
+                    x: 7 * oneBlockSize,
+                    y: 15 * oneBlockSize
+                }
+
+            ]
         );
         let newGhost3 = new Ghost(
-            13 * oneBlockSize ,
-            21 * oneBlockSize ,
+            13 * oneBlockSize,
+            21 * oneBlockSize,
             oneBlockSize,
             oneBlockSize,
             pacman.speed / 2,
@@ -343,10 +378,21 @@ let createGhosts = () => {
             ghostImageLocations[2].y,
             124,
             116,
-            6 + i
+            6,
+            [
+                {
+                    x: 8 * oneBlockSize,
+                    y: 21 * oneBlockSize
+                },
+                {
+                    x: 12 * oneBlockSize,
+                    y: 21 * oneBlockSize
+                }
+            ]
+
         );
         ghosts.push(newGhost1, newGhost2, newGhost3);
-    }
+    // }
 };
 
 let checkKey = () => {
