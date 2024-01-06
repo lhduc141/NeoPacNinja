@@ -160,7 +160,7 @@ class Pacman {
 
   changeAnimation() {
     this.currentFrame =
-      this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1
+      this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
   }
 
   draw() {
@@ -174,8 +174,28 @@ class Pacman {
       -this.x - oneBlockSize / 2,
       -this.y - oneBlockSize / 2
     );
+
+    let spriteSheet;
+    switch (this.direction) {
+      case DIRECTION_RIGHT:
+        spriteSheet = pacmanRightFrames;
+        break;
+      case DIRECTION_UP:
+        spriteSheet = pacmanUpFrames;
+        break;
+      case DIRECTION_LEFT:
+        spriteSheet = pacmanLeftFrames;
+        break;
+      case DIRECTION_BOTTOM:
+        spriteSheet = pacmanDownFrames;
+        break;
+      default:
+        spriteSheet = pacmanRightFrames; // Default to right direction
+        break;
+    }
+
     canvasContext.drawImage(
-      pacmanFrames,
+      spriteSheet,
       (this.currentFrame - 1) * 18,
       0,
       18,
