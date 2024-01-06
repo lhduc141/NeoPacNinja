@@ -1,6 +1,10 @@
 const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
-const pacmanFrames = document.getElementById("animation");
+const pacmanRightFrames = document.getElementById("animationright");
+const pacmanLeftFrames = document.getElementById("animationleft");
+const pacmanUpFrames = document.getElementById("animationup");
+const pacmanDownFrames = document.getElementById("animationdown");
+
 const ghostFrames = document.getElementById("ghosts");
 
 const walls = document.getElementById("walls");
@@ -215,7 +219,7 @@ let drawRemainingLives = () => {
 
   for (let i = 0; i < lives; i++) {
     canvasContext.drawImage(
-      pacmanFrames,
+      pacmanRightFrames,
       2 * oneBlockSize,
       0,
       oneBlockSize,
