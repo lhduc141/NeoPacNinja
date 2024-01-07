@@ -4,8 +4,10 @@ const pacmanRightFrames = document.getElementById("animationright");
 const pacmanLeftFrames = document.getElementById("animationleft");
 const pacmanUpFrames = document.getElementById("animationup");
 const pacmanDownFrames = document.getElementById("animationdown");
+const pacmanStopFrames = document.getElementById("animationstop");
 
-const ghostFrames = document.getElementById("ghosts");
+
+const ghostFrames = document.getElementById("enemy");
 
 const walls = document.getElementById("walls");
 const grounds = document.getElementById("ground");
@@ -36,10 +38,10 @@ let lives = 1;
 let ghosts = [];
 let ghostCount = 1;
 let ghostImageLocations = [
-  { x: 1, y: 0 },
-  { x: 176, y: 0 },
-  { x: 1, y: 121 },
-  { x: 176, y: 121 },
+  { x: 0, y: 0 },
+  { x: 100, y: 0 },
+  { x: 200, y: 0 },
+  { x: 300, y: 0 },
 ];
 
 let map = [
@@ -322,8 +324,8 @@ let createGhosts = () => {
       pacman.speed / 2,
       ghostImageLocations[0].x,
       ghostImageLocations[0].y,
-      124,
-      116,
+      100,
+      100,
       6 + i
     );
     let newGhost2 = new Ghost(
@@ -334,8 +336,8 @@ let createGhosts = () => {
       pacman.speed / 2,
       ghostImageLocations[1].x,
       ghostImageLocations[1].y,
-      124,
-      116,
+      100,
+      100,
       6 + i
     );
     let newGhost3 = new Ghost(
@@ -346,8 +348,8 @@ let createGhosts = () => {
       pacman.speed / 2,
       ghostImageLocations[2].x,
       ghostImageLocations[2].y,
-      124,
-      116,
+      100,
+      100,
       6 + i
     );
     ghosts.push(newGhost1, newGhost2, newGhost3);
