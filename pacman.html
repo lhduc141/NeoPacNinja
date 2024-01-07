@@ -25,6 +25,8 @@
       <h1>NEO PAC NINJA</h1>
       <a href="#" onclick="startGame()" style="color: white">Start Game</a>
       <a href="#" onclick="tutorialRule()">Tutorial</a>
+      <a href="#" onclick="leaderboard()">Leaderboard</a>
+
       <br /><br /><br />
       <div class="form-group">
         <i class="fa fa-pen"></i>
@@ -32,9 +34,9 @@
           type="text"
           class="form-control"
           name=""
-          id="name"
+          id="player-name"
           aria-describedby="helpId"
-          placeholder=""
+          placeholder="enter name"
         />
       </div>
     </div>
@@ -70,18 +72,34 @@
       <h1>Game Over</h1>
       <a href="#" onclick="resetGame()">Try Again</a>
       <a href="#" onclick="returnMenu()">Return Menu</a>
-      <a href="#">Leaderboard</a>
+      <a href="#" onclick="leaderboard()">Leaderboard</a>
     </div>
 
     <div id="game-pass">
       <h1>Completed</h1>
       <a href="#">Next Level</a>
       <a href="#">Return Menu</a>
-      <a href="#">Leaderboard</a>
+      <a href="#" onclick="leaderboard()"></a>>Leaderboard</a>
+    </div>
+
+    <div id="leaderboard">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ranked</th>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyPlayer"></tbody>
+      </table>
+
+      <a href="#" onclick="back()">Back</a>
     </div>
 
     <script src="ghost.js"></script>
     <script src="pacman.js"></script>
     <script src="game.js"></script>
+    <script src="player.js"></script>
   </body>
 </html>

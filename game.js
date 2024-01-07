@@ -33,6 +33,7 @@ let backToMenu = document.getElementById("back");
 let canvasLvl = document.getElementById("canvas");
 let failLvl = document.getElementById("game-over");
 let completLvl = document.getElementById("game-pass");
+let leaderboardLvl = document.getElementById("leaderboard");
 
 // Game variables
 let fps = 30;
@@ -56,6 +57,9 @@ let ghostImageLocations = [
   { x: 1, y: 121 },
   { x: 176, y: 121 },
 ];
+
+let playerList = [];
+let playerName;
 
 const map = [
   // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
@@ -119,6 +123,9 @@ let startGame = () => {
   completLvl.style.display = "none";
   canvasLvlStatus = true;
 
+  playerName = document.getElementById("player-name");
+  // addPlayer(playerName, score);
+
   if (failLvlStatus) {
     addMap(map, baseMap);
     start();
@@ -142,12 +149,14 @@ let tutorialRule = () => {
 let back = () => {
   tutorial.style.display = "none";
   startLvl.style.display = "block";
+  leaderboardLvl.style.display = "none";
 };
 
 //game over status
 let gameOver = () => {
   canvasLvlStatus = false;
   failLvlStatus = true;
+  // updateScore(playerName, score);
 
   drawGameOver();
   // restartPacmanAndGhosts();
@@ -160,10 +169,59 @@ let gameOver = () => {
     completLvl.style.display = "none";
   }, 3000);
 };
-let resetGame = () => {
-  deleteGhost();
-  startGame();
-};
+// let addPlayer = (name, score) => {
+//   let newPlayer = new player();
+//   newPlayer.score = score;
+//   newPlayer.name = name;
+
+//   playerList.push(newPlayer);
+//   playerOnLocalStorage("playerList", playerList);
+//   displayLeaderboard(playerList);
+// };
+// let playerOnLocalStorage = (key, value) => {
+//   var stringValue = JSON.stringify(value);
+//   localStorage.setItem(key, stringValue);
+// };
+// let displayLeaderboard = (arr) => {
+//   if (arr == undefined) {
+//     arr = playerList;
+//   }
+//   var content = "";
+//   for (var i = 1; i < 11; i++) {
+//     // index = i - 1;
+//     index = i;
+//     var playerCur = arr[index];
+//     var newPlayer = new player();
+//     playerCur = Object.assign(newPlayer, playerCur);
+//     console.log(playerCur);
+
+//     content += `
+//       <tr>
+//         <td>${i}</td>
+//         <td>${playerCur.name}</td>
+//         <td>${playerCur.score}</td>
+//       </tr>
+//     `;
+//     document.getElementById("tbodyPlayer").innerHTML = content;
+//   }
+// };
+// function inputLocalStorage(key) {
+//   var dataLocal = localStorage.getItem("playerList");
+//   // kiểm tra xem dữ liệu lấy về có hay không
+//   if (dataLocal) {
+//     // xử lí hành động khi lấy được dữ liệu
+//     var convertData = JSON.parse(dataLocal);
+//     playerList = convertData;
+//     displayLeaderboard();
+//   } else {
+//     // xử lí hành động khi không có dữ liệu để lấy
+//   }
+// }
+// inputLocalStorage();
+// let resetGame = () => {
+//   deleteGhost();
+//   startGame();
+// };
 let returnMenu = () => {
   startLvl.style.display = "block";
   canvasLvl.style.display = "none";
@@ -172,6 +230,15 @@ let returnMenu = () => {
 };
 
 let gamePass = () => {};
+
+//leaderboard
+let leaderboard = () => {
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  leaderboardLvl.style.display = "block";
+};
 
 const teleport_positions = [];
 

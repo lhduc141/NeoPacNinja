@@ -21,6 +21,7 @@ a{
     text-decoration: none;
     font-size: 30px;
     display: block;
+    font-weight: 400;
 
     border-radius: 10px solid white;
 }
@@ -28,7 +29,7 @@ a{
 #start{
     display: block;
 }
-#canvas,#addImg, #game-over, #game-pass{
+#canvas,#addImg, #game-over, #game-pass, #leaderboard{
     display: none;
 }
 p{
@@ -41,4 +42,20 @@ input, .form-group i{
     font-size: 20px;
     line-height: 30px;
     max-width: 300px;
+}
+a:hover{
+    font-weight: 900;
+}
+.table, th{
+    font-size: 30px;
+}
+th:first-child{
+    padding-right: 20px;
+}
+th:nth-child(2){
+    padding-right: 300px;
+}
+td{
+    color: white;
+    font-size: 20px;
 }
