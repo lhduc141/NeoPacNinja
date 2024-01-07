@@ -190,7 +190,7 @@ class Pacman {
         spriteSheet = pacmanDownFrames;
         break;
       default:
-        spriteSheet = pacmanRightFrames; // Default to right direction
+        spriteSheet = pacmanStopFrames; // Default to right direction
         break;
     }
 
@@ -198,7 +198,7 @@ class Pacman {
       spriteSheet,
       (this.currentFrame - 1) * 18,
       0,
-      18,
+      16,
       26,
       this.x,
       this.y,
