@@ -46,7 +46,7 @@ class Pacman {
         //speed
         if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
-          this.speed = oneBlockSize / 5;
+          this.speed = oneBlockSize / 3;
         }
         //key
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
