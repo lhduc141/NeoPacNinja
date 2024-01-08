@@ -92,6 +92,13 @@ class Pacman {
       }
     }
   }
+  countDownTele() {
+    teleStatus = false;
+    setTimeout(() => {
+      teleStatus = true;
+    }, 1500);
+    // this.countDownTele();
+  }
 
   moveBackwards() {
     switch (this.direction) {
@@ -242,5 +249,12 @@ class Pacman {
       this.height
     );
     canvasContext.restore();
+  }
+
+  isPass() {
+    if (map[1][1] == 7 && this.x == 20 && this.y == 20) {
+      return true;
+    }
+    return false;
   }
 }

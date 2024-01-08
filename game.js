@@ -6,7 +6,6 @@ const pacmanUpFrames = document.getElementById("animationup");
 const pacmanDownFrames = document.getElementById("animationdown");
 const pacmanStopFrames = document.getElementById("animationstop");
 
-
 const ghostFrames = document.getElementById("enemy");
 
 const walls = document.getElementById("walls");
@@ -164,9 +163,11 @@ let gameOver = () => {
   failLvlStatus = true;
   // updateScore(playerName, score);
 
-  drawGameOver();
-  // restartPacmanAndGhosts();
-  clearInterval(gameInterval);
+  if (!checkGameOver) {
+    checkGameOver = true;
+    drawGameOver();
+    clearInterval(gameInterval);
+  }
 
   setTimeout(() => {
     startLvl.style.display = "none";
@@ -265,14 +266,11 @@ let createNewPacman = () => {
     oneBlockSize,
     oneBlockSize,
     oneBlockSize / 6
-
   );
 };
 
 let gameLoop = () => {
-  update();
-  if (lives == 0) {
-    return;
+  if (lives == 0) return;
   if (canvasLvlStatus) {
     update();
     if (lives == 0) {
@@ -303,6 +301,7 @@ let update = () => {
   console.log("ghostCount: " + ghostCount);
   pacman.moveProcess();
   pacman.eat();
+  pacman.teleport();
   for (let i = 0; i < ghosts.length; i++) {
     ghosts[i].moveProcess();
   }
@@ -362,29 +361,22 @@ let createRect = (x, y, width, height, img) => {
   canvasContext.fillRect(x, y, width, height);
 };
 
-let gameOver = () => {
-  if(!checkGameOver){
-    checkGameOver = true;
-    drawGameOver();
-    clearInterval(gameInterval);
-  }
-};
-
 let checkGameOver = false;
 let drawGameOver = () => {
-    canvasContext.font = "40px Emulogic";
-    canvasContext.fillStyle = "white";
-    let text = "Game Over!";
-    let metrics = canvasContext.measureText(text);
-    let textWidth = metrics.width;
-    let textHeight =
-        metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-    console.log("Height", textHeight);
-    canvasContext.fillText(
-        text,
-        canvasWidth / 2 - textWidth / 2,
-        canvasWidth / 2 + textHeight / 2
-    );
+  canvasContext.font = "40px Emulogic";
+  canvasContext.fillStyle = "white";
+  let text = "Game Over!";
+  let metrics = canvasContext.measureText(text);
+  let textWidth = metrics.width;
+  let textHeight =
+    metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+  console.log("Height", textHeight);
+  canvasContext.fillText(
+    text,
+    canvasWidth / 2 - textWidth / 2,
+    canvasWidth / 2 + textHeight / 2
+  );
+};
 let drawGamePass = () => {
   canvasContext.font = "40px Emulogic";
   canvasContext.fillStyle = "white";
@@ -491,88 +483,85 @@ let drawWalls = () => {
 };
 
 let createGhosts = () => {
-    ghosts = [];
-    // for (let i = 0; i < ghostCount; i++) {
-        let newGhost1 = new Ghost(
-            9 * oneBlockSize,
-            1 * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-            oneBlockSize / 6,
-            ghostImageLocations[0].x,
-            ghostImageLocations[0].y,
-            100,
-            100,
-            3,
-            [
-                {
-                    x: 6 * oneBlockSize,
-                    y: 1 * oneBlockSize
-                },
-                {
-                    x: 9 * oneBlockSize,
-                    y: 1 * oneBlockSize
-                }
-            ]
-        );
-        let newGhost2 = new Ghost(
-            9 * oneBlockSize,
-            10 * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-            oneBlockSize / 6,
-            ghostImageLocations[1].x,
-            ghostImageLocations[1].y,
-            100,
-            100,
-            3,
+  ghosts = [];
+  // for (let i = 0; i < ghostCount; i++) {
+  let newGhost1 = new Ghost(
+    9 * oneBlockSize,
+    1 * oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize / 6,
+    ghostImageLocations[0].x,
+    ghostImageLocations[0].y,
+    100,
+    100,
+    3,
+    [
+      {
+        x: 6 * oneBlockSize,
+        y: 1 * oneBlockSize,
+      },
+      {
+        x: 9 * oneBlockSize,
+        y: 1 * oneBlockSize,
+      },
+    ]
+  );
+  let newGhost2 = new Ghost(
+    9 * oneBlockSize,
+    10 * oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    oneBlockSize / 6,
+    ghostImageLocations[1].x,
+    ghostImageLocations[1].y,
+    100,
+    100,
+    3,
 
-            [
-                {
-                    x: 7 * oneBlockSize,
-                    y: 10 * oneBlockSize
-                },
-                {
-                    x: 15 * oneBlockSize,
-                    y: 10 * oneBlockSize
-                },
-                {
-                    x: 15 * oneBlockSize,
-                    y: 15 * oneBlockSize
-                },
-                {
-                    x: 7 * oneBlockSize,
-                    y: 15 * oneBlockSize
-                }
-
-            ]
-        );
-        let newGhost3 = new Ghost(
-            13 * oneBlockSize,
-            21 * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize,
-            3,
-            ghostImageLocations[2].x,
-            ghostImageLocations[2].y,
-            100,
-            100,
-            oneBlockSize / 6,
-            [
-                {
-                    x: 10 * oneBlockSize,
-                    y: 21 * oneBlockSize
-                },
-                {
-                    x: 13 * oneBlockSize,
-                    y: 21 * oneBlockSize
-                }
-            ]
-
-        );
-        ghosts.push(newGhost1, newGhost2, newGhost3);
-    // }
-
+    [
+      {
+        x: 7 * oneBlockSize,
+        y: 10 * oneBlockSize,
+      },
+      {
+        x: 15 * oneBlockSize,
+        y: 10 * oneBlockSize,
+      },
+      {
+        x: 15 * oneBlockSize,
+        y: 15 * oneBlockSize,
+      },
+      {
+        x: 7 * oneBlockSize,
+        y: 15 * oneBlockSize,
+      },
+    ]
+  );
+  let newGhost3 = new Ghost(
+    13 * oneBlockSize,
+    21 * oneBlockSize,
+    oneBlockSize,
+    oneBlockSize,
+    3,
+    ghostImageLocations[2].x,
+    ghostImageLocations[2].y,
+    100,
+    100,
+    oneBlockSize / 6,
+    [
+      {
+        x: 10 * oneBlockSize,
+        y: 21 * oneBlockSize,
+      },
+      {
+        x: 13 * oneBlockSize,
+        y: 21 * oneBlockSize,
+      },
+    ]
+  );
+  ghosts.push(newGhost1, newGhost2, newGhost3);
+  // }
 };
 
 let checkKey = () => {
@@ -610,14 +599,13 @@ let gamePaused = false;
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape") {
     gamePause();
-  } 
+  }
 });
-
 
 let gameContinue = () => {
   if (gamePaused) {
     gamePaused = false;
-    gameInterval = setInterval(gameLoop,1000 / fps);
+    gameInterval = setInterval(gameLoop, 1000 / fps);
   }
 };
 
@@ -627,11 +615,11 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
-
 let gamePause = () => {
-  if (!gamePaused && !checkGameOver ) {
+  if (!gamePaused && !checkGameOver) {
     gamePaused = true;
     drawGamePaused();
+  }
 };
 
 let missionSuccess = () => {
@@ -645,31 +633,31 @@ let missionSuccess = () => {
 
 let drawGamePaused = () => {
   canvasContext.font = "40px Emulogic";
-    canvasContext.fillStyle = "white";
-    let text1 = "Paused!";
-    let metrics1 = canvasContext.measureText(text1);
-    let textWidth1 = metrics1.width;
-    let textHeight1 =
-        metrics1.actualBoundingBoxAscent + metrics1.actualBoundingBoxDescent;
-    console.log("Height", textHeight1);
-    canvasContext.fillText(
-        text1,
-        canvasWidth / 2 - textWidth1 / 2,
-        canvasWidth / 2 + textHeight1 / 2 - textHeight1 * 1.1
-    );
-    canvasContext.font = "30px Emulogic";
-    canvasContext.fillStyle = "white";
-    let text2 = "Press ENTER to continue";
-    let metrics2 = canvasContext.measureText(text2);
-    let textWidth2 = metrics2.width;
-    let textHeight2 =
-        metrics2.actualBoundingBoxAscent + metrics2.actualBoundingBoxDescent;
-    console.log("Height", textHeight2);
-    canvasContext.fillText(
-        text2,
-        canvasWidth / 2 - textWidth2 / 2,
-        canvasWidth / 2 + textHeight2 / 2
-    );
+  canvasContext.fillStyle = "white";
+  let text1 = "Paused!";
+  let metrics1 = canvasContext.measureText(text1);
+  let textWidth1 = metrics1.width;
+  let textHeight1 =
+    metrics1.actualBoundingBoxAscent + metrics1.actualBoundingBoxDescent;
+  console.log("Height", textHeight1);
+  canvasContext.fillText(
+    text1,
+    canvasWidth / 2 - textWidth1 / 2,
+    canvasWidth / 2 + textHeight1 / 2 - textHeight1 * 1.1
+  );
+  canvasContext.font = "30px Emulogic";
+  canvasContext.fillStyle = "white";
+  let text2 = "Press ENTER to continue";
+  let metrics2 = canvasContext.measureText(text2);
+  let textWidth2 = metrics2.width;
+  let textHeight2 =
+    metrics2.actualBoundingBoxAscent + metrics2.actualBoundingBoxDescent;
+  console.log("Height", textHeight2);
+  canvasContext.fillText(
+    text2,
+    canvasWidth / 2 - textWidth2 / 2,
+    canvasWidth / 2 + textHeight2 / 2
+  );
 };
 let addMap = (map, baseMap) => {
   map.length = 0;
@@ -696,4 +684,16 @@ window.addEventListener("keydown", (event) => {
       pacman.nextDirection = DIRECTION_BOTTOM;
     }
   }, 1);
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    gamePause();
+  }
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    gameContinue();
+  }
 });
