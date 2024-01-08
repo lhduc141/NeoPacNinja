@@ -181,7 +181,7 @@ let draw = () => {
   createRect(0, 0, canvas.width, canvas.height, "black");
   drawWalls();
   drawGround();
-  drawFoods();
+  // drawFoods();
   drawGhosts();
   pacman.draw();
   drawScore();
