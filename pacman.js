@@ -7,7 +7,7 @@ class Pacman {
     this.speed = speed;
     this.direction = DIRECTION_IDLE;
     this.nextDirection = DIRECTION_IDLE;
-    this.frameCount = 7;
+    this.frameCount = 4;
     this.currentFrame = 1;
     setInterval(() => {
       this.changeAnimation();
@@ -43,11 +43,10 @@ class Pacman {
           map[i][j] = 3;
           score++;
         }
-        //speed up
+        //speed
         if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
-          this.speed = oneBlockSize / 5;
-          speedBoostDuration = 1200;
+          this.speed = oneBlockSize / 3;
         }
         //key
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
@@ -92,13 +91,6 @@ class Pacman {
         }
       }
     }
-  }
-  countDownTele() {
-    teleStatus = false;
-    setTimeout(() => {
-      teleStatus = true;
-    }, 1500);
-    // this.countDownTele();
   }
 
   moveBackwards() {
@@ -213,29 +205,42 @@ class Pacman {
       this.x + oneBlockSize / 2,
       this.y + oneBlockSize / 2
     );
-    canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
+    // canvasContext.rotate((this.direction * 90 * Math.PI) / 180);
     canvasContext.translate(
       -this.x - oneBlockSize / 2,
       -this.y - oneBlockSize / 2
     );
+
+    let spriteSheet;
+    switch (this.direction) {
+      case DIRECTION_RIGHT:
+        spriteSheet = pacmanRightFrames;
+        break;
+      case DIRECTION_UP:
+        spriteSheet = pacmanUpFrames;
+        break;
+      case DIRECTION_LEFT:
+        spriteSheet = pacmanLeftFrames;
+        break;
+      case DIRECTION_BOTTOM:
+        spriteSheet = pacmanDownFrames;
+        break;
+      default:
+        spriteSheet = pacmanStopFrames; // Default to right direction
+        break;
+    }
+
     canvasContext.drawImage(
-      pacmanFrames,
-      (this.currentFrame - 1) * oneBlockSize,
+      spriteSheet,
+      (this.currentFrame - 1) * 18,
       0,
-      oneBlockSize,
-      oneBlockSize,
+      16,
+      26,
       this.x,
       this.y,
       this.width,
       this.height
     );
     canvasContext.restore();
-  }
-
-  isPass() {
-    if (map[1][1] == 7 && this.x == 20 && this.y == 20) {
-      return true;
-    }
-    return false;
   }
 }
