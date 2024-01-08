@@ -53,10 +53,11 @@ class Ghost {
       this.target = randomTargetsForGhosts[this.randomTargetIndex];
     }
     this.changeDirectionIfPossible();
-    this.moveForwards();
-    if (this.checkCollisions()) {
-      this.moveBackwards();
-      return;
+    if (this.direction !== undefined) {
+      this.moveForwards();
+      if (this.checkCollisions()) {
+        this.moveBackwards();
+      }
     }
   }
 
@@ -125,61 +126,98 @@ class Ghost {
       parseInt(this.target.x / oneBlockSize),
       parseInt(this.target.y / oneBlockSize)
     );
-    if (typeof this.direction == "undefined") {
+    if (typeof this.direction === "undefined") {
       this.direction = tempDirection;
       return;
     }
     if (
-      this.getMapY() != this.getMapYRightSide() &&
-      (this.direction == DIRECTION_LEFT || this.direction == DIRECTION_RIGHT)
+      this.getMapY() !== this.getMapYRightSide() &&
+      (this.direction === DIRECTION_LEFT || this.direction === DIRECTION_RIGHT)
     ) {
       this.direction = DIRECTION_UP;
     }
     if (
-      this.getMapX() != this.getMapXRightSide() &&
-      this.direction == DIRECTION_UP
+      this.getMapX() !== this.getMapXRightSide() &&
+      this.direction === DIRECTION_UP
     ) {
       this.direction = DIRECTION_LEFT;
     }
+
+    // Only move forwards
     this.moveForwards();
+
     if (this.checkCollisions()) {
+      // If there is a collision, move backwards
       this.moveBackwards();
       this.direction = tempDirection;
-    } else {
-      this.moveBackwards();
     }
     console.log(this.direction);
   }
 
   calculateNewDirection(map, destX, destY) {
-    let mp = [];
-    for (let i = 0; i < map.length; i++) {
-      mp[i] = map[i].slice();
-    }
+    const heuristic = (x, y) => {
+      // A heuristic function estimating the distance from (x, y) to (destX, destY)
+      return Math.abs(x - destX) + Math.abs(y - destY);
+    };
 
-    let queue = [
-      {
-        x: this.getMapX(),
-        y: this.getMapY(),
-        rightX: this.getMapXRightSide(),
-        rightY: this.getMapYRightSide(),
-        moves: [],
-      },
+    let openSet = [
+      { x: this.getMapX(), y: this.getMapY(), moves: [], cost: 0 },
     ];
-    while (queue.length > 0) {
-      let poped = queue.shift();
-      if (poped.x == destX && poped.y == destY) {
-        return poped.moves[0];
-      } else {
-        mp[poped.y][poped.x] = 1;
-        let neighborList = this.addNeighbors(poped, mp);
-        for (let i = 0; i < neighborList.length; i++) {
-          queue.push(neighborList[i]);
+    let closedSet = [];
+
+    while (openSet.length > 0) {
+      let currentNode = openSet[0];
+      let currentIndex = 0;
+
+      for (let i = 1; i < openSet.length; i++) {
+        if (openSet[i].cost < currentNode.cost) {
+          currentNode = openSet[i];
+          currentIndex = i;
+        }
+      }
+
+      openSet.splice(currentIndex, 1);
+      closedSet.push(currentNode);
+
+      if (currentNode.x === destX && currentNode.y === destY) {
+        return currentNode.moves[0];
+      }
+
+      let neighborList = this.addNeighbors(currentNode, map);
+      for (let i = 0; i < neighborList.length; i++) {
+        let neighbor = neighborList[i];
+
+        if (
+          closedSet.find(
+            (node) => node.x === neighbor.x && node.y === neighbor.y
+          )
+        ) {
+          continue;
+        }
+
+        let tentativeCost = currentNode.cost + 1; // Assuming uniform cost for now
+
+        if (
+          !openSet.find(
+            (node) => node.x === neighbor.x && node.y === neighbor.y
+          ) ||
+          tentativeCost < neighbor.cost
+        ) {
+          neighbor.cost = tentativeCost;
+          neighbor.moves = currentNode.moves.concat([neighbor.direction]);
+
+          if (
+            !openSet.find(
+              (node) => node.x === neighbor.x && node.y === neighbor.y
+            )
+          ) {
+            openSet.push(neighbor);
+          }
         }
       }
     }
 
-    return 1; // direction
+    return 1; // default direction if no path is found
   }
 
   addNeighbors(poped, mp) {
