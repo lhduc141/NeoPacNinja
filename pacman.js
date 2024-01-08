@@ -54,6 +54,42 @@ class Pacman {
           keys--;
         }
       }
+
+      if (speedBoostDuration > 0) {
+        speedBoostDuration -= 1;
+      } else {
+        this.speed = this.speed = oneBlockSize / 10;
+      }
+    }
+  }
+
+  teleport() {
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[0].length; j++) {
+        if (map[i][j] == 5 && this.getMapX() == j && this.getMapY() == i) {
+          if (teleStatus == true) {
+            switch (true) {
+              case i == 4 && j == 4:
+                this.x = 17 * oneBlockSize;
+                this.y = 19 * oneBlockSize;
+                break;
+              case i == 19 && j == 17:
+                this.x = 4 * oneBlockSize;
+                this.y = 4 * oneBlockSize;
+                break;
+              case i == 2 && j == 10:
+                this.x = 9 * oneBlockSize;
+                this.y = 9 * oneBlockSize;
+                break;
+              case i == 9 && j == 9:
+                this.x = 10 * oneBlockSize;
+                this.y = 3 * oneBlockSize;
+                break;
+            }
+            this.countDownTele();
+          }
+        }
+      }
     }
   }
 

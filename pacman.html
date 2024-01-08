@@ -5,27 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pacman</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="/main.css" />
   </head>
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pacman</title>
-  </head>
+  <body>
+    <div id="start" style="display: block">
+      <h1>NEO PAC NINJA</h1>
+      <a href="#" onclick="startGame()" style="color: white">Start Game</a>
+      <a href="#" onclick="tutorialRule()">Tutorial</a>
+      <a href="#" onclick="leaderboard()">Leaderboard</a>
 
-  <body
-    style="margin: 0; background-color: black; width: 100%; text-align: center"
-  >
+      <br /><br /><br />
+      <div class="form-group">
+        <i class="fa fa-pen"></i>
+        <input
+          type="text"
+          class="form-control"
+          name=""
+          id="player-name"
+          aria-describedby="helpId"
+          placeholder="enter name"
+        />
+      </div>
+    </div>
+    <div id="tutorial" style="display: none">
+      <h1>Ninja Tutorial</h1>
+      <p>
+        <i class="fa fa-angle-right"></i> Avoid being caught by the soldiers
+        <br />
+        <i class="fa fa-angle-right"></i> Find the keys to open the door <br />
+        <i class="fa fa-angle-right"></i> When the door appears, quickly run
+        there<br />
+        <i class="fa fa-angle-right"></i> Shoes can help you run faster <br />
+        <i class="fa fa-angle-right"></i> The trapdoor can teleport to another
+        place <br />
+      </p>
+      <a href="#" onclick="back()">Back</a>
+    </div>
+
     <canvas id="canvas" width="630" height="750"></canvas>
-    <div style="display: none">
-      <img id="animationright" src="assets/BlueNinjaRight.png" width="140" height="20" />
-      <img id="animationleft" src="assets/BlueNinjaLeft.png" width="140" height="20" />
-      <img id="animationup" src="assets/BlueNinjaUp.png" width="140" height="20" />
-      <img id="animationdown" src="assets/BlueNinjaDown.png" width="140" height="20" />
-      <img id="animationstop" src="assets/BlueNinjaStop.png" width="140" height="20" />
 
-      <img id="enemy" src="assets/enemy.png" width="140" height="20" />
+    <div id="addImg">
+      <img id="animation" src="assets/animations.gif" width="140" height="20" />
+      <img id="ghosts" src="assets/ghost.png" width="140" height="20" />
+
       <img id="walls" src="assets/walls.png" width="140" height="20" />
       <img id="ground" src="assets/grounds.png" width="140" height="20" />
       <img id="speed" src="assets/speed.png" width="140" height="20" />
@@ -33,8 +68,39 @@
       <img id="key" src="assets/keys.png" width="140" height="20" />
       <img id="finish" src="assets/finish.png" width="140" height="20" />
     </div>
+
+    <div id="game-over">
+      <h1>Game Over</h1>
+      <a href="#" onclick="resetGame()">Try Again</a>
+      <a href="#" onclick="returnMenu()">Return Menu</a>
+      <a href="#" onclick="leaderboard()">Leaderboard</a>
+    </div>
+
+    <div id="game-pass">
+      <h1>Completed</h1>
+      <a href="#">Next Level</a>
+      <a href="#">Return Menu</a>
+      <a href="#" onclick="leaderboard()"></a>>Leaderboard</a>
+    </div>
+
+    <div id="leaderboard">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ranked</th>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyPlayer"></tbody>
+      </table>
+
+      <a href="#" onclick="back()">Back</a>
+    </div>
+
     <script src="ghost.js"></script>
     <script src="pacman.js"></script>
     <script src="game.js"></script>
+    <script src="player.js"></script>
   </body>
 </html>

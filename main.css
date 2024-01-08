@@ -1,0 +1,61 @@
+body{
+    margin: 0;
+    background-color: black;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    font-family:  'Pixelify Sans', sans-serif;
+}
+h1, a, div{
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+a{
+    padding: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 30px;
+    display: block;
+    font-weight: 400;
+
+    border-radius: 10px solid white;
+}
+/* ----------------- */
+#start{
+    display: block;
+}
+#canvas,#addImg, #game-over, #game-pass, #leaderboard{
+    display: none;
+}
+p{
+    line-height: 40px;
+}
+#start h1{
+    font-size: 50px;
+}
+input, .form-group i{
+    font-size: 20px;
+    line-height: 30px;
+    max-width: 300px;
+}
+a:hover{
+    font-weight: 900;
+}
+.table, th{
+    font-size: 30px;
+}
+th:first-child{
+    padding-right: 20px;
+}
+th:nth-child(2){
+    padding-right: 300px;
+}
+td{
+    color: white;
+    font-size: 20px;
+}

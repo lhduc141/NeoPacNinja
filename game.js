@@ -25,11 +25,31 @@ const DIRECTION_BOTTOM = 1;
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+canvas.style.margin = 0;
+
+//Check status to run game or not
+let startLvlStatus = false;
+let canvasLvlStatus = false;
+let failLvlStatus = false;
+let completLvlStatus = false;
+
+let startLvl = document.getElementById("start");
+let tutorial = document.getElementById("tutorial");
+let backToMenu = document.getElementById("back");
+let canvasLvl = document.getElementById("canvas");
+let failLvl = document.getElementById("game-over");
+let completLvl = document.getElementById("game-pass");
+let leaderboardLvl = document.getElementById("leaderboard");
+
 // Game variables
 let fps = 30;
 let pacman;
 let oneBlockSize = 30;
 let foodColor = "#FEB897";
+
+let teleStatus = true;
+let teleCountDownTime = 3000;
+let speedBoostDuration;
 
 let score = 0;
 let keys = 3;
@@ -44,46 +64,189 @@ let ghostImageLocations = [
   { x: 300, y: 0 },
 ];
 
-let map = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1],
-  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1],
-  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1],
-  [1, 7, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1],
-  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1],
-  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+let playerList = [];
+let playerName;
+
+const map = [
+  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
 
-const teleport_positions = [
-  {
-    origin: [-1, 10],
-    target: [20, 10],
-  },
-  {
-    origin: [1, 15],
-    target: [20, 10],
-  },
-  {
-    origin: [20, 10],
-    target: [0, 10],
-  },
+const baseMap = [
+  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
+
+//start game status
+let startGame = () => {
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "block";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  canvasLvlStatus = true;
+
+  playerName = document.getElementById("player-name");
+  // addPlayer(playerName, score);
+
+  if (failLvlStatus) {
+    addMap(map, baseMap);
+    start();
+    failLvlStatus = false;
+  } else {
+    addMap(map, baseMap);
+    start();
+  }
+};
+let start = () => {
+  createNewPacman();
+  createGhosts();
+  gameLoop();
+};
+
+//Tutorial
+let tutorialRule = () => {
+  tutorial.style.display = "block";
+  startLvl.style.display = "none";
+};
+let back = () => {
+  tutorial.style.display = "none";
+  startLvl.style.display = "block";
+  leaderboardLvl.style.display = "none";
+};
+
+//game over status
+let gameOver = () => {
+  canvasLvlStatus = false;
+  failLvlStatus = true;
+  // updateScore(playerName, score);
+
+  drawGameOver();
+  // restartPacmanAndGhosts();
+  clearInterval(gameInterval);
+
+  setTimeout(() => {
+    startLvl.style.display = "none";
+    canvasLvl.style.display = "none";
+    failLvl.style.display = "block";
+    completLvl.style.display = "none";
+  }, 3000);
+};
+// let addPlayer = (name, score) => {
+//   let newPlayer = new player();
+//   newPlayer.score = score;
+//   newPlayer.name = name;
+
+//   playerList.push(newPlayer);
+//   playerOnLocalStorage("playerList", playerList);
+//   displayLeaderboard(playerList);
+// };
+// let playerOnLocalStorage = (key, value) => {
+//   var stringValue = JSON.stringify(value);
+//   localStorage.setItem(key, stringValue);
+// };
+// let displayLeaderboard = (arr) => {
+//   if (arr == undefined) {
+//     arr = playerList;
+//   }
+//   var content = "";
+//   for (var i = 1; i < 11; i++) {
+//     // index = i - 1;
+//     index = i;
+//     var playerCur = arr[index];
+//     var newPlayer = new player();
+//     playerCur = Object.assign(newPlayer, playerCur);
+//     console.log(playerCur);
+
+//     content += `
+//       <tr>
+//         <td>${i}</td>
+//         <td>${playerCur.name}</td>
+//         <td>${playerCur.score}</td>
+//       </tr>
+//     `;
+//     document.getElementById("tbodyPlayer").innerHTML = content;
+//   }
+// };
+// function inputLocalStorage(key) {
+//   var dataLocal = localStorage.getItem("playerList");
+//   // kiểm tra xem dữ liệu lấy về có hay không
+//   if (dataLocal) {
+//     // xử lí hành động khi lấy được dữ liệu
+//     var convertData = JSON.parse(dataLocal);
+//     playerList = convertData;
+//     displayLeaderboard();
+//   } else {
+//     // xử lí hành động khi không có dữ liệu để lấy
+//   }
+// }
+// inputLocalStorage();
+// let resetGame = () => {
+//   deleteGhost();
+//   startGame();
+// };
+let returnMenu = () => {
+  startLvl.style.display = "block";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+};
+
+let gamePass = () => {};
+
+//leaderboard
+let leaderboard = () => {
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  leaderboardLvl.style.display = "block";
+};
+
+const teleport_positions = [];
 
 let randomTargetsForGhosts = [
   { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
@@ -102,6 +265,7 @@ let createNewPacman = () => {
     oneBlockSize,
     oneBlockSize,
     oneBlockSize / 6
+
   );
 };
 
@@ -109,8 +273,13 @@ let gameLoop = () => {
   update();
   if (lives == 0) {
     return;
+  if (canvasLvlStatus) {
+    update();
+    if (lives == 0) {
+      return;
+    }
+    draw();
   }
-  draw();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -119,12 +288,6 @@ let restartPacmanAndGhosts = () => {
   createNewPacman();
   createGhosts();
 };
-
-// for (let i = 0; i < map.length; i++) {
-//     for (let j = 0; j < map[0].length; j++) {
-//         map[i][j] = 2;
-//     }
-// }
 
 let onGhostCollision = () => {
   lives--;
@@ -137,6 +300,7 @@ let onGhostCollision = () => {
 
 let update = () => {
   // todo
+  console.log("ghostCount: " + ghostCount);
   pacman.moveProcess();
   pacman.eat();
   for (let i = 0; i < ghosts.length; i++) {
@@ -146,6 +310,11 @@ let update = () => {
     onGhostCollision();
   }
   checkKey();
+
+  if (pacman.isPass()) {
+    missionSuccess();
+  }
+  //   checkSpeedUpTime();
 };
 
 let drawFoods = () => {
@@ -216,6 +385,10 @@ let drawGameOver = () => {
         canvasWidth / 2 - textWidth / 2,
         canvasWidth / 2 + textHeight / 2
     );
+let drawGamePass = () => {
+  canvasContext.font = "40px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("NGU!", 110, 240);
 };
 
 let drawRemainingLives = () => {
@@ -399,6 +572,7 @@ let createGhosts = () => {
         );
         ghosts.push(newGhost1, newGhost2, newGhost3);
     // }
+
 };
 
 let checkKey = () => {
@@ -458,6 +632,13 @@ let gamePause = () => {
   if (!gamePaused && !checkGameOver ) {
     gamePaused = true;
     drawGamePaused();
+};
+
+let missionSuccess = () => {
+  var completed = document.getElementById("game-pass");
+  lives--;
+  restartPacmanAndGhosts();
+  if (lives == 0) {
     clearInterval(gameInterval);
   }
 };
@@ -490,3 +671,29 @@ let drawGamePaused = () => {
         canvasWidth / 2 + textHeight2 / 2
     );
 };
+let addMap = (map, baseMap) => {
+  map.length = 0;
+  for (let i = 0; i < baseMap.length; i++) {
+    map.push([...baseMap[i]]);
+  }
+};
+
+window.addEventListener("keydown", (event) => {
+  let k = event.keyCode;
+
+  setTimeout(() => {
+    if (k == 37 || k == 65) {
+      //left
+      pacman.nextDirection = DIRECTION_LEFT;
+    } else if (k == 39 || k == 68) {
+      //right
+      pacman.nextDirection = DIRECTION_RIGHT;
+    } else if (k == 38 || k == 87) {
+      //up
+      pacman.nextDirection = DIRECTION_UP;
+    } else if (k == 40 || k == 83) {
+      //bottom
+      pacman.nextDirection = DIRECTION_BOTTOM;
+    }
+  }, 1);
+});
