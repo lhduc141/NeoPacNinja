@@ -57,124 +57,130 @@ let lives = 1;
 let ghosts = [];
 let ghostCount = 1;
 let ghostImageLocations = [
-  { x: 0, y: 0 },
-  { x: 100, y: 0 },
-  { x: 200, y: 0 },
-  { x: 300, y: 0 },
+    { x: 0, y: 0 },
+    { x: 100, y: 0 },
+    { x: 200, y: 0 },
+    { x: 300, y: 0 },
 ];
 
 let playerList = [];
 let playerName;
 
 const map = [
-  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
-  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
-  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
-  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
-  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
-  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
-  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
-  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
-  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
+    // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+    [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1], //05
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //06
+    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //07
+    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
 
 const baseMap = [
-  // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-  [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
-  [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
-  [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
-  [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
-  [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
-  [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
-  [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
-  [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
-  [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
-  [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
-  [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
-  [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
-  [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
+    // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
+    [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
+    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
+    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //13
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1], //14
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
+    [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
+    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+    [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //22
 ];
 
+let hiddenRoom = [
+    {
+        x: 6,
+        y: 8
+    },
+];
 //start game status
 let startGame = () => {
-  startLvl.style.display = "none";
-  canvasLvl.style.display = "block";
-  failLvl.style.display = "none";
-  completLvl.style.display = "none";
-  canvasLvlStatus = true;
+    startLvl.style.display = "none";
+    canvasLvl.style.display = "block";
+    failLvl.style.display = "none";
+    completLvl.style.display = "none";
+    canvasLvlStatus = true;
 
-  playerName = document.getElementById("player-name");
-  // addPlayer(playerName, score);
+    playerName = document.getElementById("player-name");
+    // addPlayer(playerName, score);
 
-  if (failLvlStatus) {
-    addMap(map, baseMap);
-    start();
-    failLvlStatus = false;
-  } else {
-    addMap(map, baseMap);
-    start();
-  }
+    if (failLvlStatus) {
+        addMap(map, baseMap);
+        start();
+        failLvlStatus = false;
+    } else {
+        addMap(map, baseMap);
+        start();
+    }
 };
 let start = () => {
-  createNewPacman();
-  createGhosts();
-  gameLoop();
+    createNewPacman();
+    createGhosts();
+    gameLoop();
 };
 
 //Tutorial
 let tutorialRule = () => {
-  tutorial.style.display = "block";
-  startLvl.style.display = "none";
+    tutorial.style.display = "block";
+    startLvl.style.display = "none";
 };
 let back = () => {
-  tutorial.style.display = "none";
-  startLvl.style.display = "block";
-  leaderboardLvl.style.display = "none";
+    tutorial.style.display = "none";
+    startLvl.style.display = "block";
+    leaderboardLvl.style.display = "none";
 };
 
 //game over status
 let gameOver = () => {
-  canvasLvlStatus = false;
-  failLvlStatus = true;
-  // updateScore(playerName, score);
+    canvasLvlStatus = false;
+    failLvlStatus = true;
+    // updateScore(playerName, score);
 
-  if (!checkGameOver) {
-    checkGameOver = true;
-    drawGameOver();
-    clearInterval(gameInterval);
-  }
+    if (!checkGameOver) {
+        checkGameOver = true;
+        drawGameOver();
+        clearInterval(gameInterval);
+    }
 
-  setTimeout(() => {
-    startLvl.style.display = "none";
-    canvasLvl.style.display = "none";
-    failLvl.style.display = "block";
-    completLvl.style.display = "none";
-  }, 3000);
+    setTimeout(() => {
+        startLvl.style.display = "none";
+        canvasLvl.style.display = "none";
+        failLvl.style.display = "block";
+        completLvl.style.display = "none";
+    }, 3000);
 };
 // let addPlayer = (name, score) => {
 //   let newPlayer = new player();
@@ -230,344 +236,364 @@ let gameOver = () => {
 //   startGame();
 // };
 let returnMenu = () => {
-  startLvl.style.display = "block";
-  canvasLvl.style.display = "none";
-  failLvl.style.display = "none";
-  completLvl.style.display = "none";
+    startLvl.style.display = "block";
+    canvasLvl.style.display = "none";
+    failLvl.style.display = "none";
+    completLvl.style.display = "none";
 };
 
 let gamePass = () => {};
 
 //leaderboard
 let leaderboard = () => {
-  startLvl.style.display = "none";
-  canvasLvl.style.display = "none";
-  failLvl.style.display = "none";
-  completLvl.style.display = "none";
-  leaderboardLvl.style.display = "block";
+    startLvl.style.display = "none";
+    canvasLvl.style.display = "none";
+    failLvl.style.display = "none";
+    completLvl.style.display = "none";
+    leaderboardLvl.style.display = "block";
 };
 
 const teleport_positions = [];
 
 let randomTargetsForGhosts = [
-  { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
-  { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
-  { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize },
-  {
-    x: (map[0].length - 2) * oneBlockSize,
-    y: (map.length - 2) * oneBlockSize,
-  },
+    { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
+    { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
+    { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize },
+    {
+        x: (map[0].length - 2) * oneBlockSize,
+        y: (map.length - 2) * oneBlockSize,
+    },
 ];
 
 let createNewPacman = () => {
-  pacman = new Pacman(
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 6
-  );
+    pacman = new Pacman(
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize / 10
+    );
 };
 
 let gameLoop = () => {
-  if (lives == 0) return;
-  if (canvasLvlStatus) {
-    update();
-    if (lives == 0) {
-      return;
+    if (lives == 0) return;
+    if (canvasLvlStatus) {
+        update();
+        if (lives == 0) {
+            return;
+        }
+        draw();
     }
-    draw();
-  }
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
 
 let restartPacmanAndGhosts = () => {
-  createNewPacman();
-  createGhosts();
+    createNewPacman();
+    createGhosts();
 };
 
 let onGhostCollision = () => {
-  lives--;
-  restartPacmanAndGhosts();
-  if (lives == 0) {
-    clearInterval(gameInterval);
-    gameOver();
-  }
+    lives--;
+    restartPacmanAndGhosts();
+    if (lives == 0) {
+        clearInterval(gameInterval);
+        gameOver();
+    }
 };
 
 let update = () => {
-  // todo
-  console.log("ghostCount: " + ghostCount);
-  pacman.moveProcess();
-  pacman.eat();
-  pacman.teleport();
-  for (let i = 0; i < ghosts.length; i++) {
-    ghosts[i].moveProcess();
-  }
-  if (pacman.checkGhostCollision(ghosts)) {
-    onGhostCollision();
-  }
-  checkKey();
+    // todo
+    pacman.moveProcess();
+    pacman.eat();
+    pacman.teleport();
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].moveProcess();
+    }
+    if (pacman.checkGhostCollision(ghosts)) {
+        onGhostCollision();
+    }
+    checkKey();
 
-  if (pacman.isPass()) {
-    missionSuccess();
-  }
-  //   checkSpeedUpTime();
+    if(pacman.isPass()) {
+        missionSuccess();
+    }
+    //   checkSpeedUpTime();
 };
 
 let drawFoods = () => {
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      if (map[i][j] == 2) {
-        createRect(
-          j * oneBlockSize + oneBlockSize / 3,
-          i * oneBlockSize + oneBlockSize / 3,
-          oneBlockSize / 3,
-          oneBlockSize / 3,
-          foodColor
-        );
-      }
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 2) {
+                createRect(
+                    j * oneBlockSize + oneBlockSize / 3,
+                    i * oneBlockSize + oneBlockSize / 3,
+                    oneBlockSize / 3,
+                    oneBlockSize / 3,
+                    foodColor
+                );
+            }
+        }
     }
-  }
 };
 
 let drawScore = () => {
-  canvasContext.font = "20px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("Score: " + score, 0, oneBlockSize * (map.length + 1));
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText(
+        "Score: " + score,
+        0,
+        oneBlockSize * (map.length + 1)
+    );
 };
 
 let drawGhosts = () => {
-  for (let i = 0; i < ghosts.length; i++) {
-    ghosts[i].draw();
-  }
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].draw();
+    }
 };
 
 let draw = () => {
-  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-  createRect(0, 0, canvas.width, canvas.height, "black");
-  drawWalls();
-  drawGround();
-  // drawFoods();
-  drawGhosts();
-  pacman.draw();
-  drawScore();
-  // drawRemainingLives();
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    createRect(0, 0, canvas.width, canvas.height, "black");
+    drawWalls();
+    drawGround();
+    // drawFoods();
+    drawGhosts();
+    pacman.draw();
+    drawScore();
+    // drawRemainingLives();
 };
 
 let createRect = (x, y, width, height, img) => {
-  canvasContext.fillStyle = img;
-  canvasContext.fillRect(x, y, width, height);
+    canvasContext.fillStyle = img;
+    canvasContext.fillRect(x, y, width, height);
 };
 
 let checkGameOver = false;
 let drawGameOver = () => {
-  canvasContext.font = "40px Emulogic";
-  canvasContext.fillStyle = "white";
-  let text = "Game Over!";
-  let metrics = canvasContext.measureText(text);
-  let textWidth = metrics.width;
-  let textHeight =
-    metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-  console.log("Height", textHeight);
-  canvasContext.fillText(
-    text,
-    canvasWidth / 2 - textWidth / 2,
-    canvasWidth / 2 + textHeight / 2
-  );
+    canvasContext.font = "40px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    let text = "Game Over!";
+    let metrics = canvasContext.measureText(text);
+    let textWidth = metrics.width;
+    let textHeight =
+        metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    canvasContext.fillText(
+        text,
+        canvasWidth / 2 - textWidth / 2,
+        canvasWidth / 2 + textHeight / 2
+    );
 };
 let drawGamePass = () => {
-  canvasContext.font = "40px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("NGU!", 110, 240);
+    canvasContext.font = "40px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    let text = "Congratulation!";
+    let metrics = canvasContext.measureText(text);
+    let textWidth = metrics.width;
+    let textHeight =
+        metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    canvasContext.fillText(
+        text,
+        canvasWidth / 2 - textWidth / 2,
+        canvasWidth / 2 + textHeight / 2
+    );
 };
 
 let drawRemainingLives = () => {
-  canvasContext.font = "20px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
+    canvasContext.font = "20px Emulogic";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
 
-  for (let i = 0; i < lives; i++) {
-    canvasContext.drawImage(
-      pacmanRightFrames,
-      2 * oneBlockSize,
-      0,
-      oneBlockSize,
-      oneBlockSize,
-      350 + i * oneBlockSize,
-      oneBlockSize * map.length + 2,
-      oneBlockSize,
-      oneBlockSize
-    );
-  }
+    for (let i = 0; i < lives; i++) {
+        canvasContext.drawImage(
+            pacmanRightFrames,
+            2 * oneBlockSize,
+            0,
+            oneBlockSize,
+            oneBlockSize,
+            350 + i * oneBlockSize,
+            oneBlockSize * map.length + 2,
+            oneBlockSize,
+            oneBlockSize
+        );
+    }
 };
 
 let drawGround = () => {
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      switch (map[i][j]) {
-        case 2:
-          canvasContext.drawImage(
-            grounds,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-        case 3:
-          canvasContext.drawImage(
-            grounds,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-        case 4:
-          canvasContext.drawImage(
-            speed,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-        case 5:
-          canvasContext.drawImage(
-            tunnel,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-        case 6:
-          canvasContext.drawImage(
-            key,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-        case 7:
-          canvasContext.drawImage(
-            finish,
-            j * oneBlockSize,
-            i * oneBlockSize,
-            oneBlockSize,
-            oneBlockSize
-          );
-          break;
-      }
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            switch (map[i][j]) {
+                case 2:
+                    canvasContext.drawImage(
+                        grounds,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 3:
+                    canvasContext.drawImage(
+                        grounds,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 4:
+                    canvasContext.drawImage(
+                        speed,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 5:
+                    canvasContext.drawImage(
+                        tunnel,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 6:
+                    canvasContext.drawImage(
+                        key,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 7:
+                    canvasContext.drawImage(
+                        finish,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+                case 8:
+                    canvasContext.drawImage(
+                        grounds,
+                        j * oneBlockSize,
+                        i * oneBlockSize,
+                        oneBlockSize,
+                        oneBlockSize
+                    );
+                    break;
+            }
+        }
     }
-  }
 };
 
 let drawWalls = () => {
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      if (map[i][j] == 1) {
-        canvasContext.drawImage(
-          walls,
-          j * oneBlockSize,
-          i * oneBlockSize,
-          oneBlockSize,
-          oneBlockSize
-        );
-      }
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 1 || map[i][j] == 8) {
+                canvasContext.drawImage(
+                    walls,
+                    j * oneBlockSize,
+                    i * oneBlockSize,
+                    oneBlockSize,
+                    oneBlockSize
+                );
+            }
+        }
     }
-  }
 };
 
 let createGhosts = () => {
-  ghosts = [];
-  // for (let i = 0; i < ghostCount; i++) {
-  let newGhost1 = new Ghost(
-    9 * oneBlockSize,
-    1 * oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 6,
-    ghostImageLocations[0].x,
-    ghostImageLocations[0].y,
-    100,
-    100,
-    3,
-    [
-      {
-        x: 6 * oneBlockSize,
-        y: 1 * oneBlockSize,
-      },
-      {
-        x: 9 * oneBlockSize,
-        y: 1 * oneBlockSize,
-      },
-    ]
-  );
-  let newGhost2 = new Ghost(
-    9 * oneBlockSize,
-    10 * oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    oneBlockSize / 6,
-    ghostImageLocations[1].x,
-    ghostImageLocations[1].y,
-    100,
-    100,
-    3,
+    ghosts = [];
+    // for (let i = 0; i < ghostCount; i++) {
+    let newGhost1 = new Ghost(
+        9 * oneBlockSize,
+        1 * oneBlockSize,
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize / 10,
+        ghostImageLocations[0].x,
+        ghostImageLocations[0].y,
+        100,
+        100,
+        4,
+        [
+            {
+                x: 6 * oneBlockSize,
+                y: 1 * oneBlockSize,
+            },
+            {
+                x: 9 * oneBlockSize,
+                y: 1 * oneBlockSize,
+            },
+        ]
+    );
+    let newGhost2 = new Ghost(
+        9 * oneBlockSize,
+        10 * oneBlockSize,
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize / 10,
+        ghostImageLocations[1].x,
+        ghostImageLocations[1].y,
+        100,
+        100,
+        4,
 
-    [
-      {
-        x: 7 * oneBlockSize,
-        y: 10 * oneBlockSize,
-      },
-      {
-        x: 15 * oneBlockSize,
-        y: 10 * oneBlockSize,
-      },
-      {
-        x: 15 * oneBlockSize,
-        y: 15 * oneBlockSize,
-      },
-      {
-        x: 7 * oneBlockSize,
-        y: 15 * oneBlockSize,
-      },
-    ]
-  );
-  let newGhost3 = new Ghost(
-    13 * oneBlockSize,
-    21 * oneBlockSize,
-    oneBlockSize,
-    oneBlockSize,
-    3,
-    ghostImageLocations[2].x,
-    ghostImageLocations[2].y,
-    100,
-    100,
-    oneBlockSize / 6,
-    [
-      {
-        x: 10 * oneBlockSize,
-        y: 21 * oneBlockSize,
-      },
-      {
-        x: 13 * oneBlockSize,
-        y: 21 * oneBlockSize,
-      },
-    ]
-  );
-  ghosts.push(newGhost1, newGhost2, newGhost3);
-  // }
+        [
+            {
+                x: 7 * oneBlockSize,
+                y: 10 * oneBlockSize,
+            },
+            {
+                x: 15 * oneBlockSize,
+                y: 10 * oneBlockSize,
+            },
+            {
+                x: 15 * oneBlockSize,
+                y: 15 * oneBlockSize,
+            },
+            {
+                x: 7 * oneBlockSize,
+                y: 15 * oneBlockSize,
+            },
+        ]
+    );
+    let newGhost3 = new Ghost(
+        13 * oneBlockSize,
+        21 * oneBlockSize,
+        oneBlockSize,
+        oneBlockSize,
+        oneBlockSize / 10,
+        ghostImageLocations[2].x,
+        ghostImageLocations[2].y,
+        100,
+        100,
+        4,
+        [
+            {
+                x: 10 * oneBlockSize,
+                y: 21 * oneBlockSize,
+            },
+            {
+                x: 13 * oneBlockSize,
+                y: 21 * oneBlockSize,
+            },
+        ]
+    );
+    ghosts.push(newGhost1, newGhost2, newGhost3);
+    // }
 };
 
 let checkKey = () => {
-  if (keys == 0) {
-    map[1][1] = 7;
-  }
+    if (keys == 0) {
+        map[1][1] = 7;
+    }
 };
 
 createNewPacman();
@@ -575,125 +601,128 @@ createGhosts();
 gameLoop();
 
 window.addEventListener("keydown", (event) => {
-  let k = event.keyCode;
+    let k = event.keyCode;
 
-  setTimeout(() => {
-    if (k == 37 || k == 65) {
-      //left
-      pacman.nextDirection = DIRECTION_LEFT;
-    } else if (k == 39 || k == 68) {
-      //right
-      pacman.nextDirection = DIRECTION_RIGHT;
-    } else if (k == 38 || k == 87) {
-      //up
-      pacman.nextDirection = DIRECTION_UP;
-    } else if (k == 40 || k == 83) {
-      //bottom
-      pacman.nextDirection = DIRECTION_BOTTOM;
-    }
-  }, 1);
+    setTimeout(() => {
+        if (k == 37 || k == 65) {
+            //left
+            pacman.nextDirection = DIRECTION_LEFT;
+        } else if (k == 39 || k == 68) {
+            //right
+            pacman.nextDirection = DIRECTION_RIGHT;
+        } else if (k == 38 || k == 87) {
+            //up
+            pacman.nextDirection = DIRECTION_UP;
+        } else if (k == 40 || k == 83) {
+            //bottom
+            pacman.nextDirection = DIRECTION_BOTTOM;
+        }
+    }, 1);
 });
 
-let gamePaused = false;
 
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") {
-    gamePause();
-  }
+    if (e.key === "Escape") {
+        gamePause();
+    }
 });
 
 let gameContinue = () => {
-  if (gamePaused) {
-    gamePaused = false;
-    gameInterval = setInterval(gameLoop, 1000 / fps);
-  }
+    if (gamePaused) {
+        gamePaused = false;
+        gameInterval = setInterval(gameLoop, 1000 / fps);
+    }
 };
 
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    gameContinue();
-  }
+    if (e.key === "Enter") {
+        gameContinue();
+    }
 });
 
+let gamePaused = false;
 let gamePause = () => {
-  if (!gamePaused && !checkGameOver) {
-    gamePaused = true;
-    drawGamePaused();
-  }
+    if (!gamePaused && !checkGameOver) {
+        gamePaused = true;
+        drawGamePaused();
+        clearInterval(gameInterval);
+    }
 };
 
+let gameWin = false;
 let missionSuccess = () => {
-  var completed = document.getElementById("game-pass");
-  lives--;
-  restartPacmanAndGhosts();
-  if (lives == 0) {
-    clearInterval(gameInterval);
-  }
+    var completed = document.getElementById("game-pass");
+    lives--;
+    // restartPacmanAndGhosts();
+    if (lives == 0 && !gameWin) {
+        drawGamePass();
+        clearInterval(gameInterval);
+    }
 };
 
 let drawGamePaused = () => {
-  canvasContext.font = "40px Emulogic";
-  canvasContext.fillStyle = "white";
-  let text1 = "Paused!";
-  let metrics1 = canvasContext.measureText(text1);
-  let textWidth1 = metrics1.width;
-  let textHeight1 =
-    metrics1.actualBoundingBoxAscent + metrics1.actualBoundingBoxDescent;
-  console.log("Height", textHeight1);
-  canvasContext.fillText(
-    text1,
-    canvasWidth / 2 - textWidth1 / 2,
-    canvasWidth / 2 + textHeight1 / 2 - textHeight1 * 1.1
-  );
-  canvasContext.font = "30px Emulogic";
-  canvasContext.fillStyle = "white";
-  let text2 = "Press ENTER to continue";
-  let metrics2 = canvasContext.measureText(text2);
-  let textWidth2 = metrics2.width;
-  let textHeight2 =
-    metrics2.actualBoundingBoxAscent + metrics2.actualBoundingBoxDescent;
-  console.log("Height", textHeight2);
-  canvasContext.fillText(
-    text2,
-    canvasWidth / 2 - textWidth2 / 2,
-    canvasWidth / 2 + textHeight2 / 2
-  );
+    canvasContext.font = "40px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    let text1 = "Paused!";
+    let metrics1 = canvasContext.measureText(text1);
+    let textWidth1 = metrics1.width;
+    let textHeight1 =
+        metrics1.actualBoundingBoxAscent + metrics1.actualBoundingBoxDescent;
+    console.log("Height", textHeight1);
+    canvasContext.fillText(
+        text1,
+        canvasWidth / 2 - textWidth1 / 2,
+        canvasWidth / 2 + textHeight1 / 2 + textHeight1 * 0.2 
+    );
+    canvasContext.font = "20px Pixelify Sans";
+    canvasContext.fillStyle = "white";
+    let text2 = "Press ENTER to continue";
+    let metrics2 = canvasContext.measureText(text2);
+    let textWidth2 = metrics2.width;
+    let textHeight2 =
+        metrics2.actualBoundingBoxAscent + metrics2.actualBoundingBoxDescent;
+    console.log("Height", textHeight2);
+    canvasContext.fillText(
+        text2,
+        canvasWidth / 2 - textWidth2 / 2,
+        canvasWidth / 2 + textHeight2 / 2 + textHeight2 * 2.5
+    );
 };
 let addMap = (map, baseMap) => {
-  map.length = 0;
-  for (let i = 0; i < baseMap.length; i++) {
-    map.push([...baseMap[i]]);
-  }
+    map.length = 0;
+    for (let i = 0; i < baseMap.length; i++) {
+        map.push([...baseMap[i]]);
+    }
 };
 
 window.addEventListener("keydown", (event) => {
-  let k = event.keyCode;
+    let k = event.keyCode;
 
-  setTimeout(() => {
-    if (k == 37 || k == 65) {
-      //left
-      pacman.nextDirection = DIRECTION_LEFT;
-    } else if (k == 39 || k == 68) {
-      //right
-      pacman.nextDirection = DIRECTION_RIGHT;
-    } else if (k == 38 || k == 87) {
-      //up
-      pacman.nextDirection = DIRECTION_UP;
-    } else if (k == 40 || k == 83) {
-      //bottom
-      pacman.nextDirection = DIRECTION_BOTTOM;
+    setTimeout(() => {
+        if (k == 37 || k == 65) {
+            //left
+            pacman.nextDirection = DIRECTION_LEFT;
+        } else if (k == 39 || k == 68) {
+            //right
+            pacman.nextDirection = DIRECTION_RIGHT;
+        } else if (k == 38 || k == 87) {
+            //up
+            pacman.nextDirection = DIRECTION_UP;
+        } else if (k == 40 || k == 83) {
+            //bottom
+            pacman.nextDirection = DIRECTION_BOTTOM;
+        }
+    }, 1);
+});
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+        gamePause();
     }
-  }, 1);
 });
 
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") {
-    gamePause();
-  }
-});
-
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    gameContinue();
-  }
+    if (e.key === "Enter") {
+        gameContinue();
+    }
 });
