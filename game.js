@@ -149,10 +149,6 @@ let start = () => {
   gameLoop();
 };
 
-// // add sound 
-// let gameSound = () => {
-    
-// }
 
 //Tutorial
 let tutorialRule = () => {
