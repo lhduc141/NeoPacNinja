@@ -36,6 +36,10 @@ class Ghost {
     isInRange() {
         let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
         let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
+        if (pacman.isHidden()) {
+            return false;
+            console.log("Hidden");
+        }
         if (
             Math.sqrt(xDistance * xDistance + yDistance * yDistance) <=
             this.range
@@ -130,7 +134,19 @@ class Ghost {
             ] == 1 ||
             map[parseInt(this.y / oneBlockSize + 0.9999)][
                 parseInt(this.x / oneBlockSize + 0.9999)
-            ] == 1
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+            ] == 8 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+            ] == 8 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 8 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 8
         ) {
             isCollided = true;
         }
@@ -172,7 +188,6 @@ class Ghost {
         } else {
             this.moveBackwards();
         }
-        console.log(this.direction);
     }
 
     calculateNewDirection(map, destX, destY) {

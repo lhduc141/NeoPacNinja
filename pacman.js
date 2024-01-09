@@ -46,7 +46,8 @@ class Pacman {
         //speed
         if (map[i][j] == 4 && this.getMapX() == j && this.getMapY() == i) {
           map[i][j] = 2;
-          this.speed = oneBlockSize / 3;
+          this.speed = oneBlockSize / 5;
+          speedBoostDuration = 500;
         }
         //key
         if (map[i][j] == 6 && this.getMapX() == j && this.getMapY() == i) {
@@ -58,7 +59,7 @@ class Pacman {
       if (speedBoostDuration > 0) {
         speedBoostDuration -= 1;
       } else {
-        this.speed = this.speed = oneBlockSize / 10;
+        this.speed = oneBlockSize / 10;
       }
     }
   }
@@ -137,8 +138,8 @@ class Pacman {
   checkCollisions() {
     let isCollided = false;
     if (
-      map[parseInt(this.y / oneBlockSize)][parseInt(this.x / oneBlockSize)] ==
-        1 ||
+      map[parseInt(this.y / oneBlockSize)][parseInt(this.x / oneBlockSize)] 
+        == 1 ||
       map[parseInt(this.y / oneBlockSize + 0.9999)][
         parseInt(this.x / oneBlockSize)
       ] == 1 ||
@@ -252,9 +253,29 @@ class Pacman {
   }
 
   isPass() {
-    if (map[1][1] == 7 && this.x == 20 && this.y == 20) {
+    if (map[1][1] == 7 && this.x == 30 && this.y == 30) {
       return true;
+
     }
     return false;
   }
+  isHidden(){
+    let x1 = this.x;
+    let y1 = this.y;
+    let x2 = this.x + this.width;
+    let y2 = this.y + this.height;
+    for(let i = 0; i < hiddenRoom.length; i++){
+      let roomX1 = oneBlockSize * hiddenRoom[i].x;
+      let roomY1 = oneBlockSize * hiddenRoom[i].y;
+      let roomX2 = roomX1 + oneBlockSize;
+      let roomY2 = roomY1 + oneBlockSize;
+      if(Math.min(x2, roomX2) > (Math.max(x1, roomX1) + oneBlockSize / 2) &&
+          Math.min(y2,roomY2) > (Math.max(x1, roomX1) + oneBlockSize / 2)
+        ){
+          return true;
+        }
+    }
+    return false;
+  }
+
 }
