@@ -123,7 +123,7 @@ const baseMap = [
 let hiddenRoom = [
     {
         x: 6,
-        y: 8
+        y: 8,
     },
 ];
 //start game status
@@ -242,8 +242,6 @@ let returnMenu = () => {
     completLvl.style.display = "none";
 };
 
-let gamePass = () => {};
-
 //leaderboard
 let leaderboard = () => {
     startLvl.style.display = "none";
@@ -315,10 +313,16 @@ let update = () => {
     }
     checkKey();
 
-    if(pacman.isPass()) {
-        missionSuccess();
+    if (pacman.isPass()) {
+        gamePass();
+        console.log("Pass");
     }
     //   checkSpeedUpTime();
+};
+let checkKey = () => {
+    if (keys == 0) {
+        map[1][1] = 7;
+    }
 };
 
 let drawFoods = () => {
@@ -590,11 +594,6 @@ let createGhosts = () => {
     // }
 };
 
-let checkKey = () => {
-    if (keys == 0) {
-        map[1][1] = 7;
-    }
-};
 
 createNewPacman();
 createGhosts();
@@ -619,7 +618,6 @@ window.addEventListener("keydown", (event) => {
         }
     }, 1);
 });
-
 
 document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
@@ -650,11 +648,10 @@ let gamePause = () => {
 };
 
 let gameWin = false;
-let missionSuccess = () => {
-    var completed = document.getElementById("game-pass");
-    lives--;
+let gamePass = () => {
     // restartPacmanAndGhosts();
-    if (lives == 0 && !gameWin) {
+    if ( !gameWin && !checkGameOver) {
+        gameWin = true;
         drawGamePass();
         clearInterval(gameInterval);
     }
@@ -672,7 +669,7 @@ let drawGamePaused = () => {
     canvasContext.fillText(
         text1,
         canvasWidth / 2 - textWidth1 / 2,
-        canvasWidth / 2 + textHeight1 / 2 + textHeight1 * 0.2 
+        canvasWidth / 2 + textHeight1 / 2 + textHeight1 * 0.2
     );
     canvasContext.font = "20px Pixelify Sans";
     canvasContext.fillStyle = "white";
