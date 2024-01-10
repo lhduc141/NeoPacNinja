@@ -79,12 +79,12 @@ class Pacman {
                 this.y = 4 * oneBlockSize;
                 break;
               case i == 2 && j == 10:
-                this.x = 9 * oneBlockSize;
-                this.y = 9 * oneBlockSize;
+                this.x = 8 * oneBlockSize;
+                this.y = 8 * oneBlockSize;
                 break;
-              case i == 9 && j == 9:
+              case i == 8 && j == 8:
                 this.x = 10 * oneBlockSize;
-                this.y = 3 * oneBlockSize;
+                this.y = 2 * oneBlockSize;
                 break;
             }
             this.countDownTele();
@@ -252,10 +252,10 @@ class Pacman {
     canvasContext.restore();
   }
 
-  isPass() {
+  onDoor() {
+    console.log(map[1][1], this.x, this.y);
     if (map[1][1] == 7 && this.x == 30 && this.y == 30) {
       return true;
-
     }
     return false;
   }

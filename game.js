@@ -14,6 +14,7 @@ const tunnel = document.getElementById("tunnel");
 const speed = document.getElementById("speed");
 const key = document.getElementById("key");
 const finish = document.getElementById("finish");
+const hidden = document.getElementById("hidden");
 
 const DIRECTION_IDLE = 0;
 const DIRECTION_RIGHT = 4;
@@ -69,15 +70,15 @@ let playerName;
 const map = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1], //05
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //06
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //07
-    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 2, 2, 2, 2, 2, 8, 1, 5, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
     [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
@@ -96,15 +97,15 @@ const map = [
 const baseMap = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
-    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 2, 2, 2, 2, 2, 8, 1, 5, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
     [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
@@ -123,9 +124,12 @@ const baseMap = [
 let hiddenRoom = [
     {
         x: 6,
-        y: 8
+        y: 8,
     },
 ];
+
+let audio = new Audio('start.mp3');
+audio.play();
 //start game status
 let startGame = () => {
     startLvl.style.display = "none";
@@ -242,8 +246,6 @@ let returnMenu = () => {
     completLvl.style.display = "none";
 };
 
-let gamePass = () => {};
-
 //leaderboard
 let leaderboard = () => {
     startLvl.style.display = "none";
@@ -280,9 +282,12 @@ let gameLoop = () => {
     if (canvasLvlStatus) {
         update();
         if (lives == 0) {
+            console.log("inside if live")
             return;
         }
+        console.log("before draw");
         draw();
+        console.log("after draw");
     }
 };
 
@@ -302,6 +307,16 @@ let onGhostCollision = () => {
     }
 };
 
+// let onDoorCollision = () => {
+//     restartPacmanAndGhosts();
+//     if (pacman.onDoor()) {
+//         clearInterval(gameInterval);
+//         gamePass();
+//     }
+// };
+
+
+
 let update = () => {
     // todo
     pacman.moveProcess();
@@ -315,10 +330,16 @@ let update = () => {
     }
     checkKey();
 
-    if(pacman.isPass()) {
-        missionSuccess();
+    if (pacman.onDoor()) {
+        console.log("ijdbvijb");
+        gamePass();
     }
     //   checkSpeedUpTime();
+};
+let checkKey = () => {
+    if (keys == 0) {
+        map[1][1] = 7;
+    }
 };
 
 let drawFoods = () => {
@@ -362,6 +383,9 @@ let draw = () => {
     drawGhosts();
     pacman.draw();
     drawScore();
+    if(gameWin){
+        drawGamePass();
+    }
     // drawRemainingLives();
 };
 
@@ -398,6 +422,8 @@ let drawGamePass = () => {
         canvasWidth / 2 - textWidth / 2,
         canvasWidth / 2 + textHeight / 2
     );
+    console.log(canvasWidth / 2 - textWidth / 2,
+    canvasWidth / 2 + textHeight / 2);
 };
 
 let drawRemainingLives = () => {
@@ -480,7 +506,7 @@ let drawGround = () => {
                     break;
                 case 8:
                     canvasContext.drawImage(
-                        grounds,
+                        hidden,
                         j * oneBlockSize,
                         i * oneBlockSize,
                         oneBlockSize,
@@ -590,11 +616,6 @@ let createGhosts = () => {
     // }
 };
 
-let checkKey = () => {
-    if (keys == 0) {
-        map[1][1] = 7;
-    }
-};
 
 createNewPacman();
 createGhosts();
@@ -619,7 +640,6 @@ window.addEventListener("keydown", (event) => {
         }
     }, 1);
 });
-
 
 document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") {
@@ -650,12 +670,10 @@ let gamePause = () => {
 };
 
 let gameWin = false;
-let missionSuccess = () => {
-    var completed = document.getElementById("game-pass");
-    lives--;
-    // restartPacmanAndGhosts();
-    if (lives == 0 && !gameWin) {
-        drawGamePass();
+let gamePass = () => {
+    console.log(gameWin, checkGameOver);
+    if(!gameWin){
+        gameWin = true;
         clearInterval(gameInterval);
     }
 };
@@ -672,7 +690,7 @@ let drawGamePaused = () => {
     canvasContext.fillText(
         text1,
         canvasWidth / 2 - textWidth1 / 2,
-        canvasWidth / 2 + textHeight1 / 2 + textHeight1 * 0.2 
+        canvasWidth / 2 + textHeight1 / 2 + textHeight1 * 0.2
     );
     canvasContext.font = "20px Pixelify Sans";
     canvasContext.fillStyle = "white";
