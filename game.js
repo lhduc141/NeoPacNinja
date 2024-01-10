@@ -14,6 +14,7 @@ const tunnel = document.getElementById("tunnel");
 const speed = document.getElementById("speed");
 const key = document.getElementById("key");
 const finish = document.getElementById("finish");
+const hidden = document.getElementById("hidden");
 
 const DIRECTION_IDLE = 0;
 const DIRECTION_RIGHT = 4;
@@ -69,15 +70,15 @@ let playerName;
 const map = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1], //05
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //06
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //07
-    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 2, 2, 2, 2, 2, 8, 1, 5, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
     [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
@@ -96,15 +97,15 @@ const map = [
 const baseMap = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 8, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //05
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //06
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //07
-    [1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
-    [1, 2, 1, 2, 1, 2, 1, 1, 1, 5, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
+    [1, 2, 2, 2, 2, 2, 8, 1, 5, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 1], //08
+    [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 1], //09
     [1, 4, 1, 2, 1, 2, 1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1], //10
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1], //11
     [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1], //12
@@ -300,6 +301,16 @@ let onGhostCollision = () => {
     }
 };
 
+let onDoorCollision = () => {
+    restartPacmanAndGhosts();
+    if (pacman.onDoor()) {
+        clearInterval(gameInterval);
+        gamePass();
+    }
+};
+
+
+
 let update = () => {
     // todo
     pacman.moveProcess();
@@ -313,9 +324,8 @@ let update = () => {
     }
     checkKey();
 
-    if (pacman.isPass()) {
-        gamePass();
-        console.log("Pass");
+    if (pacman.onDoor()) {
+        gamePause();
     }
     //   checkSpeedUpTime();
 };
@@ -484,7 +494,7 @@ let drawGround = () => {
                     break;
                 case 8:
                     canvasContext.drawImage(
-                        grounds,
+                        hidden,
                         j * oneBlockSize,
                         i * oneBlockSize,
                         oneBlockSize,
@@ -640,7 +650,7 @@ document.addEventListener("keydown", function (e) {
 
 let gamePaused = false;
 let gamePause = () => {
-    if (!gamePaused && !checkGameOver) {
+    if ( !gamePaused && !checkGameOver) {
         gamePaused = true;
         drawGamePaused();
         clearInterval(gameInterval);
@@ -649,8 +659,7 @@ let gamePause = () => {
 
 let gameWin = false;
 let gamePass = () => {
-    // restartPacmanAndGhosts();
-    if ( !gameWin && !checkGameOver) {
+    if(!gameWin && !checkGameOver) {
         gameWin = true;
         drawGamePass();
         clearInterval(gameInterval);
