@@ -128,8 +128,6 @@ let hiddenRoom = [
     },
 ];
 
-let audio = new Audio('start.mp3');
-audio.play();
 //start game status
 let startGame = () => {
     startLvl.style.display = "none";
@@ -149,6 +147,8 @@ let startGame = () => {
         addMap(map, baseMap);
         start();
     }
+    let audio = new Audio('start.mp3');
+    audio.play();
 };
 let start = () => {
     createNewPacman();
@@ -338,7 +338,7 @@ let update = () => {
 };
 let checkKey = () => {
     if (keys == 0) {
-        map[1][1] = 7;
+        map[13][11] = 7;
     }
 };
 
