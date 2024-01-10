@@ -156,8 +156,8 @@ let startGame = () => {
         addMap(map, baseMap);
         start();
     }
-    //   let audio = new Audio("start.mp3");
-    //   audio.play();
+    let audio = new Audio("start.mp3");
+    audio.play();
 
     timerVar = setInterval(countTimer, 1000);
 };
@@ -214,7 +214,7 @@ let gameOver = () => {
         failLvl.style.display = "block";
         completLvl.style.display = "none";
         time.style.display = "none";
-    }, 3000);
+    }, 1500);
 };
 
 //leaderBoard
@@ -350,14 +350,6 @@ let onGhostCollision = () => {
     }
 };
 
-// let onDoorCollision = () => {
-//     restartPacmanAndGhosts();
-//     if (pacman.onDoor()) {
-//         clearInterval(gameInterval);
-//         gamePass();
-//     }
-// };
-
 let update = () => {
     // todo
     pacman.moveProcess();
@@ -375,7 +367,6 @@ let update = () => {
         console.log("ijdbvijb");
         gamePass();
     }
-    //   checkSpeedUpTime();
 };
 let checkKey = () => {
     if (keys == 0) {
@@ -410,14 +401,11 @@ let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
     drawGround();
-    // drawFoods();
     drawGhosts();
     pacman.draw();
-    //   drawScore();
     if (gameWin) {
         drawGamePass();
     }
-    // drawRemainingLives();
 };
 
 let createRect = (x, y, width, height, img) => {
@@ -702,9 +690,18 @@ let gamePass = () => {
     if (!gameWin) {
         gameWin = true;
         clearInterval(gameInterval);
-        clearInterval(timerVar);
-        addPlayer(playerName, totalSeconds);
     }
+    playerName = document.getElementById("player-name").value;
+
+    clearInterval(timerVar);
+    addPlayer(playerName, totalSeconds);
+    setTimeout(() => {
+        startLvl.style.display = "none";
+        canvasLvl.style.display = "none";
+        failLvl.style.display = "none";
+        completLvl.style.display = "block";
+        time.style.display = "none";
+    }, 1500);
 };
 
 let drawGamePaused = () => {
