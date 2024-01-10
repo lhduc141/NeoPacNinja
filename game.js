@@ -27,10 +27,9 @@ const canvasHeight = canvas.height;
 canvas.style.margin = 0;
 
 //Check status to run game or not
-let startLvlStatus = false;
-let canvasLvlStatus = false;
-let failLvlStatus = false;
-let completLvlStatus = false;
+let checkGamePlay = false;
+let checkGameOver = false;
+let checkGamePass = false;
 
 let startLvl = document.getElementById("start");
 let tutorial = document.getElementById("tutorial");
@@ -64,7 +63,7 @@ let ghostImageLocations = [
 ];
 
 let playerList = [];
-let playerName;
+let playerName = document.getElementById("player-name");
 
 const map = [
   // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
@@ -126,15 +125,15 @@ let startGame = () => {
   canvasLvl.style.display = "block";
   failLvl.style.display = "none";
   completLvl.style.display = "none";
-  canvasLvlStatus = true;
 
-  playerName = document.getElementById("player-name");
+  checkGamePlay = true;
   // addPlayer(playerName, score);
 
-  if (failLvlStatus) {
+  if (checkGameOver) {
+    setInterval(gameLoop, 1000 / fps);
     addMap(map, baseMap);
     start();
-    failLvlStatus = false;
+    checkGameOver = false;
   } else {
     addMap(map, baseMap);
     start();
@@ -159,15 +158,21 @@ let back = () => {
 
 //game over status
 let gameOver = () => {
-  canvasLvlStatus = false;
-  failLvlStatus = true;
-  // updateScore(playerName, score);
+  checkGamePlay = false;
+  checkGameOver = true;
+
+  playerName = document.getElementById("player-name").value;
+
+  console.log(playerName);
+  console.log(score);
 
   if (!checkGameOver) {
     checkGameOver = true;
     drawGameOver();
     clearInterval(gameInterval);
   }
+
+  addPlayer(playerName, score);
 
   setTimeout(() => {
     startLvl.style.display = "none";
@@ -176,59 +181,45 @@ let gameOver = () => {
     completLvl.style.display = "none";
   }, 3000);
 };
-// let addPlayer = (name, score) => {
-//   let newPlayer = new player();
-//   newPlayer.score = score;
-//   newPlayer.name = name;
 
-//   playerList.push(newPlayer);
-//   playerOnLocalStorage("playerList", playerList);
-//   displayLeaderboard(playerList);
-// };
-// let playerOnLocalStorage = (key, value) => {
-//   var stringValue = JSON.stringify(value);
-//   localStorage.setItem(key, stringValue);
-// };
-// let displayLeaderboard = (arr) => {
-//   if (arr == undefined) {
-//     arr = playerList;
-//   }
-//   var content = "";
-//   for (var i = 1; i < 11; i++) {
-//     // index = i - 1;
-//     index = i;
-//     var playerCur = arr[index];
-//     var newPlayer = new player();
-//     playerCur = Object.assign(newPlayer, playerCur);
-//     console.log(playerCur);
+//leaderBoard
+let addPlayer = (name, score) => {
+  let newPlayer = new Player();
+  newPlayer.name = name;
+  newPlayer.score = score;
 
-//     content += `
-//       <tr>
-//         <td>${i}</td>
-//         <td>${playerCur.name}</td>
-//         <td>${playerCur.score}</td>
-//       </tr>
-//     `;
-//     document.getElementById("tbodyPlayer").innerHTML = content;
-//   }
-// };
-// function inputLocalStorage(key) {
-//   var dataLocal = localStorage.getItem("playerList");
-//   // kiểm tra xem dữ liệu lấy về có hay không
-//   if (dataLocal) {
-//     // xử lí hành động khi lấy được dữ liệu
-//     var convertData = JSON.parse(dataLocal);
-//     playerList = convertData;
-//     displayLeaderboard();
-//   } else {
-//     // xử lí hành động khi không có dữ liệu để lấy
-//   }
-// }
-// inputLocalStorage();
-// let resetGame = () => {
-//   deleteGhost();
-//   startGame();
-// };
+  playerList.push(newPlayer);
+
+  playerOnLocalStorage("playerList", playerList);
+};
+let playerOnLocalStorage = (key, value) => {
+  var stringValue = JSON.stringify(value);
+  localStorage.setItem(key, stringValue);
+};
+let inputLocalStorage = (key) => {
+  var dataLocal = localStorage.getItem("playerList");
+  // kiểm tra xem dữ liệu lấy về có hay không
+  if (dataLocal) {
+    // xử lí hành động khi lấy được dữ liệu
+    var convertData = JSON.parse(dataLocal);
+    playerList = convertData;
+  } else {
+    // xử lí hành động khi không có dữ liệu để lấy
+  }
+};
+inputLocalStorage();
+
+let addNameOfPlayer = () => {
+  for (var i = 0; i < playerList.length; i++) {
+    scoreOfPlayer.push(playerList[i].score);
+    nameOfPlayer.push(playerList[i].name);
+  }
+};
+
+let resetGame = () => {
+  deleteGhost();
+  startGame();
+};
 let returnMenu = () => {
   startLvl.style.display = "block";
   canvasLvl.style.display = "none";
@@ -245,6 +236,22 @@ let leaderboard = () => {
   failLvl.style.display = "none";
   completLvl.style.display = "none";
   leaderboardLvl.style.display = "block";
+  // console.log(playerList);
+
+  playerList.sort((a, b) => b.score - a.score);
+  var content = "";
+  for (var i = 1; i < 11; i++) {
+    var playerCur = playerList[i - 1];
+
+    content += `
+      <tr>
+        <td>${i}</td>
+        <td>${playerCur.name}</td>
+        <td>${playerCur.score}</td>
+      </tr>
+    `;
+    document.getElementById("tbodyPlayer").innerHTML = content;
+  }
 };
 
 const teleport_positions = [];
@@ -271,7 +278,7 @@ let createNewPacman = () => {
 
 let gameLoop = () => {
   if (lives == 0) return;
-  if (canvasLvlStatus) {
+  if (checkGamePlay) {
     update();
     if (lives == 0) {
       return;
@@ -298,7 +305,6 @@ let onGhostCollision = () => {
 
 let update = () => {
   // todo
-  console.log("ghostCount: " + ghostCount);
   pacman.moveProcess();
   pacman.eat();
   pacman.teleport();
@@ -361,7 +367,6 @@ let createRect = (x, y, width, height, img) => {
   canvasContext.fillRect(x, y, width, height);
 };
 
-let checkGameOver = false;
 let drawGameOver = () => {
   canvasContext.font = "40px Emulogic";
   canvasContext.fillStyle = "white";
@@ -569,10 +574,6 @@ let checkKey = () => {
     map[1][1] = 7;
   }
 };
-
-createNewPacman();
-createGhosts();
-gameLoop();
 
 window.addEventListener("keydown", (event) => {
   let k = event.keyCode;
