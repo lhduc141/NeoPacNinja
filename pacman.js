@@ -253,9 +253,9 @@ class Pacman {
   }
 
   onDoor() {
+    console.log(map[1][1], this.x, this.y);
     if (map[1][1] == 7 && this.x == 30 && this.y == 30) {
       return true;
-
     }
     return false;
   }

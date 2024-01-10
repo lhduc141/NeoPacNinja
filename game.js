@@ -127,6 +127,9 @@ let hiddenRoom = [
         y: 8,
     },
 ];
+
+let audio = new Audio('start.mp3');
+audio.play();
 //start game status
 let startGame = () => {
     startLvl.style.display = "none";
@@ -279,9 +282,12 @@ let gameLoop = () => {
     if (canvasLvlStatus) {
         update();
         if (lives == 0) {
+            console.log("inside if live")
             return;
         }
+        console.log("before draw");
         draw();
+        console.log("after draw");
     }
 };
 
@@ -301,13 +307,13 @@ let onGhostCollision = () => {
     }
 };
 
-let onDoorCollision = () => {
-    restartPacmanAndGhosts();
-    if (pacman.onDoor()) {
-        clearInterval(gameInterval);
-        gamePass();
-    }
-};
+// let onDoorCollision = () => {
+//     restartPacmanAndGhosts();
+//     if (pacman.onDoor()) {
+//         clearInterval(gameInterval);
+//         gamePass();
+//     }
+// };
 
 
 
@@ -325,7 +331,8 @@ let update = () => {
     checkKey();
 
     if (pacman.onDoor()) {
-        gamePause();
+        console.log("ijdbvijb");
+        gamePass();
     }
     //   checkSpeedUpTime();
 };
@@ -376,6 +383,9 @@ let draw = () => {
     drawGhosts();
     pacman.draw();
     drawScore();
+    if(gameWin){
+        drawGamePass();
+    }
     // drawRemainingLives();
 };
 
@@ -412,6 +422,8 @@ let drawGamePass = () => {
         canvasWidth / 2 - textWidth / 2,
         canvasWidth / 2 + textHeight / 2
     );
+    console.log(canvasWidth / 2 - textWidth / 2,
+    canvasWidth / 2 + textHeight / 2);
 };
 
 let drawRemainingLives = () => {
@@ -650,7 +662,7 @@ document.addEventListener("keydown", function (e) {
 
 let gamePaused = false;
 let gamePause = () => {
-    if ( !gamePaused && !checkGameOver) {
+    if (!gamePaused && !checkGameOver) {
         gamePaused = true;
         drawGamePaused();
         clearInterval(gameInterval);
@@ -659,9 +671,9 @@ let gamePause = () => {
 
 let gameWin = false;
 let gamePass = () => {
-    if(!gameWin && !checkGameOver) {
+    console.log(gameWin, checkGameOver);
+    if(!gameWin){
         gameWin = true;
-        drawGamePass();
         clearInterval(gameInterval);
     }
 };
