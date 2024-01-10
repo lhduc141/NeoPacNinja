@@ -50,12 +50,23 @@ a:hover{
     font-size: 30px;
 }
 th:first-child{
-    padding-right: 20px;
+    padding-right: 40px;
 }
 th:nth-child(2){
-    padding-right: 300px;
+    padding-right: 200px;
 }
 td{
+    color: white;
+    font-size: 20px;
+}
+td:nth-child(2){
+    text-align: left;
+}
+
+#timer{
+    position: absolute;
+    top: 680px; 
+    right: 890px;
     color: white;
     font-size: 20px;
 }

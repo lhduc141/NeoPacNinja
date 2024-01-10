@@ -38,6 +38,7 @@ let canvasLvl = document.getElementById("canvas");
 let failLvl = document.getElementById("game-over");
 let completLvl = document.getElementById("game-pass");
 let leaderboardLvl = document.getElementById("leaderboard");
+let time = document.getElementById("timer");
 
 // Game variables
 let fps = 30;
@@ -64,6 +65,9 @@ let ghostImageLocations = [
 
 let playerList = [];
 let playerName = document.getElementById("player-name");
+
+let timerVar;
+let totalSeconds = 0;
 
 const map = [
   // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
@@ -125,6 +129,7 @@ let startGame = () => {
   canvasLvl.style.display = "block";
   failLvl.style.display = "none";
   completLvl.style.display = "none";
+  time.style.display = "block";
 
   checkGamePlay = true;
   // addPlayer(playerName, score);
@@ -138,12 +143,27 @@ let startGame = () => {
     addMap(map, baseMap);
     start();
   }
+
+  timerVar = setInterval(countTimer, 1000);
 };
 let start = () => {
   createNewPacman();
   createGhosts();
   gameLoop();
 };
+
+function countTimer() {
+  ++totalSeconds;
+  var hour = Math.floor(totalSeconds / 3600);
+  var minute = Math.floor((totalSeconds - hour * 3600) / 60);
+  var seconds = totalSeconds - (hour * 3600 + minute * 60);
+  if (hour < 10) hour = "0" + hour;
+  if (minute < 10) minute = "0" + minute;
+  if (seconds < 10) seconds = "0" + seconds;
+  document.getElementById(
+    "timer"
+  ).innerHTML = `Your time: ${hour}:${minute}:${seconds}`;
+}
 
 //Tutorial
 let tutorialRule = () => {
@@ -154,6 +174,7 @@ let back = () => {
   tutorial.style.display = "none";
   startLvl.style.display = "block";
   leaderboardLvl.style.display = "none";
+  time.style.display = "none";
 };
 
 //game over status
@@ -166,19 +187,22 @@ let gameOver = () => {
   console.log(playerName);
   console.log(score);
 
+  clearInterval(timerVar);
+
   if (!checkGameOver) {
     checkGameOver = true;
     drawGameOver();
     clearInterval(gameInterval);
   }
 
-  addPlayer(playerName, score);
+  addPlayer(playerName, totalSeconds);
 
   setTimeout(() => {
     startLvl.style.display = "none";
     canvasLvl.style.display = "none";
     failLvl.style.display = "block";
     completLvl.style.display = "none";
+    time.style.display = "none";
   }, 3000);
 };
 
@@ -218,6 +242,7 @@ let returnMenu = () => {
   canvasLvl.style.display = "none";
   failLvl.style.display = "none";
   completLvl.style.display = "none";
+  time.style.display = "none";
 };
 
 let gamePass = () => {};
@@ -232,24 +257,22 @@ let leaderboard = () => {
 
   // console.log(playerList);
 
-  playerList.sort((a, b) => b.score - a.score);
+  playerList.sort((a, b) => a.score - b.score);
   var content = "";
 
   for (var i = 1; i < 11; i++) {
     try {
       var playerCur = playerList[i - 1];
 
-      // Check if playerCur is defined before accessing its properties
       if (playerCur) {
         content += `
           <tr>
             <td>${i}</td>
             <td>${playerCur.name}</td>
-            <td>${playerCur.score}</td>
+            <td>${playerCur.score} s</td>
           </tr>
         `;
       } else {
-        // Handle the case where playerCur is undefined
         content += `
           <tr>
             <td>${i}</td>
@@ -259,7 +282,6 @@ let leaderboard = () => {
         `;
       }
     } catch (error) {
-      // Handle any other unexpected errors
       console.error("Error while processing player", i, error);
     }
 
@@ -351,11 +373,11 @@ let drawFoods = () => {
   }
 };
 
-let drawScore = () => {
-  canvasContext.font = "20px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("Score: " + score, 0, oneBlockSize * (map.length + 1));
-};
+// let drawScore = () => {
+//   canvasContext.font = "20px Emulogic";
+//   canvasContext.fillStyle = "white";
+//   canvasContext.fillText("Score: " + score, 0, oneBlockSize * (map.length + 1));
+// };
 
 let drawGhosts = () => {
   for (let i = 0; i < ghosts.length; i++) {
@@ -371,7 +393,7 @@ let draw = () => {
   // drawFoods();
   drawGhosts();
   pacman.draw();
-  drawScore();
+  // drawScore();
   // drawRemainingLives();
 };
 
