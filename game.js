@@ -78,7 +78,7 @@ let totalSeconds = 0;
 const map = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 2, 2, 2, 6, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
@@ -95,7 +95,7 @@ const map = [
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
-    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 8, 1, 1, 1, 1, 1, 1, 2, 1], //18
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
     [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
@@ -105,7 +105,7 @@ const map = [
 const baseMap = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //00
-    [1, 2, 6, 6, 6, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
+    [1, 2, 2, 2, 2, 6, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1], //01
     [1, 2, 1, 1, 1, 1, 1, 4, 1, 1, 5, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1], //02
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 2, 2, 1], //03
     [1, 2, 1, 2, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1], //04
@@ -122,7 +122,7 @@ const baseMap = [
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2, 1], //15
     [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1], //16
     [1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1], //17
-    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1], //18
+    [1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 8, 1, 1, 1, 1, 1, 1, 2, 1], //18
     [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 6, 2, 2, 2, 5, 1, 2, 1], //19
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 2, 1], //20
     [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 4, 2, 2, 1], //21
@@ -133,6 +133,10 @@ let hiddenRoom = [
     {
         x: 6,
         y: 8,
+    },
+    {
+        x: 12,
+        y: 18,
     },
 ];
 
@@ -214,7 +218,7 @@ let gameOver = () => {
         failLvl.style.display = "block";
         completLvl.style.display = "none";
         time.style.display = "none";
-    }, 1500);
+    }, 500);
 };
 
 //leaderBoard
@@ -325,12 +329,9 @@ let gameLoop = () => {
     if (checkGamePlay) {
         update();
         if (lives == 0) {
-            console.log("inside if live");
             return;
         }
-        console.log("before draw");
         draw();
-        console.log("after draw");
     }
 };
 
@@ -364,13 +365,12 @@ let update = () => {
     checkKey();
 
     if (pacman.onDoor()) {
-        console.log("ijdbvijb");
         gamePass();
     }
 };
 let checkKey = () => {
     if (keys == 0) {
-        map[1][1] = 7;
+        map[13][11] = 7;
     }
 };
 
@@ -437,10 +437,6 @@ let drawGamePass = () => {
         metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
     canvasContext.fillText(
         text,
-        canvasWidth / 2 - textWidth / 2,
-        canvasWidth / 2 + textHeight / 2
-    );
-    console.log(
         canvasWidth / 2 - textWidth / 2,
         canvasWidth / 2 + textHeight / 2
     );
@@ -666,6 +662,7 @@ let gameContinue = () => {
     if (gamePaused) {
         gamePaused = false;
         gameInterval = setInterval(gameLoop, 1000 / fps);
+        timerVar = setInterval(countTimer, 1000);
     }
 };
 
@@ -680,13 +677,13 @@ let gamePause = () => {
     if (!gamePaused && !checkGameOver) {
         gamePaused = true;
         drawGamePaused();
+        clearInterval(timerVar);
         clearInterval(gameInterval);
     }
 };
 
 let gameWin = false;
 let gamePass = () => {
-    console.log(gameWin, checkGameOver);
     if (!gameWin) {
         gameWin = true;
         clearInterval(gameInterval);
