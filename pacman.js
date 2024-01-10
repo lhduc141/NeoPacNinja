@@ -253,8 +253,7 @@ class Pacman {
   }
 
   onDoor() {
-    console.log(map[1][1], this.x, this.y);
-    if (map[1][1] == 7 && this.x == 30 && this.y == 30) {
+    if (map[13][11] == 7 && this.x == 11 * oneBlockSize && this.y == 13 * oneBlockSize) {
       return true;
     }
     return false;

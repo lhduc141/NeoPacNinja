@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pacman</title>
+    <title>NeoPac Ninja</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,12 +45,14 @@
       <p>
         <i class="fa fa-angle-right"></i> Avoid being caught by the soldiers
         <br />
-        <i class="fa fa-angle-right"></i> Find the keys to open the door <br />
+        <i class="fa fa-angle-right"></i> Find enough 3 keys to open the exit <br />
         <i class="fa fa-angle-right"></i> When the door appears, quickly run
-        there<br />
+        there to win the game <br />
         <i class="fa fa-angle-right"></i> Shoes can help you run faster <br />
         <i class="fa fa-angle-right"></i> The trapdoor can teleport to another
         place <br />
+        <i class="fa fa-angle-right"></i> Use the hidden room to get out of soldiers' sights<br />
+        <i class="fa fa-angle-right"></i> You have only ONE chance ! <br />
       </p>
       <a href="#" onclick="back()">Back</a>
     </div>
@@ -82,16 +84,14 @@
 
     <div id="game-over">
       <h1>Game Over</h1>
-      <a href="#" onclick="resetGame()">Try Again</a>
       <a href="#" onclick="returnMenu()">Return Menu</a>
       <a href="#" onclick="leaderboard()">Leaderboard</a>
     </div>
 
     <div id="game-pass">
       <h1>Completed</h1>
-      <a href="#">Next Level</a>
-      <a href="#">Return Menu</a>
-      <a href="#" onclick="leaderboard()"></a>>Leaderboard</a>
+      <a href="#" onclick="returnMenu()">Return Menu</a>
+      <a href="#" onclick="leaderboard()">Leaderboard</a>
     </div>
 
     <div id="leaderboard">
