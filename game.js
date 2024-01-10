@@ -209,13 +209,6 @@ let inputLocalStorage = (key) => {
 };
 inputLocalStorage();
 
-let addNameOfPlayer = () => {
-  for (var i = 0; i < playerList.length; i++) {
-    scoreOfPlayer.push(playerList[i].score);
-    nameOfPlayer.push(playerList[i].name);
-  }
-};
-
 let resetGame = () => {
   deleteGhost();
   startGame();
