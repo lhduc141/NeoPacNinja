@@ -156,8 +156,8 @@ let startGame = () => {
     addMap(map, baseMap);
     start();
   }
-  let audio = new Audio('start.mp3');
-  audio.play();
+  let audioStart = new Audio('start.mp3');
+  audioStart.play();
 
   timerVar = setInterval(countTimer, 1000);
 };
@@ -705,8 +705,8 @@ let gamePass = () => {
   }
   playerName = document.getElementById("player-name").value;
 
-  let audio = new Audio('win.mp3');
-  audio.play();
+  let audioWin = new Audio('win.mp3');
+  audioWin.play();
   // phan nhac win 
   
   clearInterval(timerVar);
