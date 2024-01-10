@@ -702,9 +702,11 @@ let gamePass = () => {
   if (!gameWin) {
     gameWin = true;
     clearInterval(gameInterval);
-    clearInterval(timerVar);
-    addPlayer(playerName, totalSeconds);
   }
+  playerName = document.getElementById("player-name").value;
+
+  clearInterval(timerVar);
+  addPlayer(playerName, totalSeconds);
 };
 
 let drawGamePaused = () => {
