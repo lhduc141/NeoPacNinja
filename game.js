@@ -28,10 +28,9 @@ const canvasHeight = canvas.height;
 canvas.style.margin = 0;
 
 //Check status to run game or not
-let startLvlStatus = false;
-let canvasLvlStatus = false;
-let failLvlStatus = false;
-let completLvlStatus = false;
+let checkGamePlay = false;
+let checkGameOver = false;
+let checkGamePass = false;
 
 let startLvl = document.getElementById("start");
 let tutorial = document.getElementById("tutorial");
@@ -40,6 +39,7 @@ let canvasLvl = document.getElementById("canvas");
 let failLvl = document.getElementById("game-over");
 let completLvl = document.getElementById("game-pass");
 let leaderboardLvl = document.getElementById("leaderboard");
+let time = document.getElementById("timer");
 
 // Game variables
 let fps = 30;
@@ -65,7 +65,10 @@ let ghostImageLocations = [
 ];
 
 let playerList = [];
-let playerName;
+let playerName = document.getElementById("player-name");
+
+let timerVar;
+let totalSeconds = 0;
 
 const map = [
     // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
@@ -132,23 +135,26 @@ let audio = new Audio('start.mp3');
 audio.play();
 //start game status
 let startGame = () => {
-    startLvl.style.display = "none";
-    canvasLvl.style.display = "block";
-    failLvl.style.display = "none";
-    completLvl.style.display = "none";
-    canvasLvlStatus = true;
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "block";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  time.style.display = "block";
 
-    playerName = document.getElementById("player-name");
-    // addPlayer(playerName, score);
+  checkGamePlay = true;
+  // addPlayer(playerName, score);
 
-    if (failLvlStatus) {
-        addMap(map, baseMap);
-        start();
-        failLvlStatus = false;
-    } else {
-        addMap(map, baseMap);
-        start();
-    }
+  if (checkGameOver) {
+    setInterval(gameLoop, 1000 / fps);
+    addMap(map, baseMap);
+    start();
+    checkGameOver = false;
+  } else {
+    addMap(map, baseMap);
+    start();
+  }
+
+  timerVar = setInterval(countTimer, 1000);
 };
 let start = () => {
     createNewPacman();
@@ -156,103 +162,137 @@ let start = () => {
     gameLoop();
 };
 
+function countTimer() {
+  ++totalSeconds;
+  var hour = Math.floor(totalSeconds / 3600);
+  var minute = Math.floor((totalSeconds - hour * 3600) / 60);
+  var seconds = totalSeconds - (hour * 3600 + minute * 60);
+  if (hour < 10) hour = "0" + hour;
+  if (minute < 10) minute = "0" + minute;
+  if (seconds < 10) seconds = "0" + seconds;
+  document.getElementById(
+    "timer"
+  ).innerHTML = `Your time: ${hour}:${minute}:${seconds}`;
+}
+
 //Tutorial
 let tutorialRule = () => {
     tutorial.style.display = "block";
     startLvl.style.display = "none";
 };
 let back = () => {
-    tutorial.style.display = "none";
-    startLvl.style.display = "block";
-    leaderboardLvl.style.display = "none";
+
+  tutorial.style.display = "none";
+  startLvl.style.display = "block";
+  leaderboardLvl.style.display = "none";
+  time.style.display = "none";
 };
 
 //game over status
 let gameOver = () => {
-    canvasLvlStatus = false;
-    failLvlStatus = true;
-    // updateScore(playerName, score);
+  checkGamePlay = false;
+  checkGameOver = true;
 
-    if (!checkGameOver) {
-        checkGameOver = true;
-        drawGameOver();
-        clearInterval(gameInterval);
-    }
+  playerName = document.getElementById("player-name").value;
 
-    setTimeout(() => {
-        startLvl.style.display = "none";
-        canvasLvl.style.display = "none";
-        failLvl.style.display = "block";
-        completLvl.style.display = "none";
-    }, 3000);
-};
-// let addPlayer = (name, score) => {
-//   let newPlayer = new player();
-//   newPlayer.score = score;
-//   newPlayer.name = name;
+  clearInterval(timerVar);
 
-//   playerList.push(newPlayer);
-//   playerOnLocalStorage("playerList", playerList);
-//   displayLeaderboard(playerList);
-// };
-// let playerOnLocalStorage = (key, value) => {
-//   var stringValue = JSON.stringify(value);
-//   localStorage.setItem(key, stringValue);
-// };
-// let displayLeaderboard = (arr) => {
-//   if (arr == undefined) {
-//     arr = playerList;
-//   }
-//   var content = "";
-//   for (var i = 1; i < 11; i++) {
-//     // index = i - 1;
-//     index = i;
-//     var playerCur = arr[index];
-//     var newPlayer = new player();
-//     playerCur = Object.assign(newPlayer, playerCur);
-//     console.log(playerCur);
+  if (!checkGameOver) {
+    checkGameOver = true;
+    drawGameOver();
+    clearInterval(gameInterval);
+  }
 
-//     content += `
-//       <tr>
-//         <td>${i}</td>
-//         <td>${playerCur.name}</td>
-//         <td>${playerCur.score}</td>
-//       </tr>
-//     `;
-//     document.getElementById("tbodyPlayer").innerHTML = content;
-//   }
-// };
-// function inputLocalStorage(key) {
-//   var dataLocal = localStorage.getItem("playerList");
-//   // kiểm tra xem dữ liệu lấy về có hay không
-//   if (dataLocal) {
-//     // xử lí hành động khi lấy được dữ liệu
-//     var convertData = JSON.parse(dataLocal);
-//     playerList = convertData;
-//     displayLeaderboard();
-//   } else {
-//     // xử lí hành động khi không có dữ liệu để lấy
-//   }
-// }
-// inputLocalStorage();
-// let resetGame = () => {
-//   deleteGhost();
-//   startGame();
-// };
-let returnMenu = () => {
-    startLvl.style.display = "block";
+  addPlayer(playerName, totalSeconds);
+
+  setTimeout(() => {
+    startLvl.style.display = "none";
     canvasLvl.style.display = "none";
-    failLvl.style.display = "none";
+    failLvl.style.display = "block";
     completLvl.style.display = "none";
+    time.style.display = "none";
+  }, 3000);
+};
+
+//leaderBoard
+let addPlayer = (name, score) => {
+  let newPlayer = new Player();
+  newPlayer.name = name;
+  newPlayer.score = score;
+
+  playerList.push(newPlayer);
+
+  playerOnLocalStorage("playerList", playerList);
+};
+let playerOnLocalStorage = (key, value) => {
+  var stringValue = JSON.stringify(value);
+  localStorage.setItem(key, stringValue);
+};
+let inputLocalStorage = (key) => {
+  var dataLocal = localStorage.getItem("playerList");
+  // kiểm tra xem dữ liệu lấy về có hay không
+  if (dataLocal) {
+    // xử lí hành động khi lấy được dữ liệu
+    var convertData = JSON.parse(dataLocal);
+    playerList = convertData;
+  } else {
+    // xử lí hành động khi không có dữ liệu để lấy
+  }
+};
+inputLocalStorage();
+
+let resetGame = () => {
+  deleteGhost();
+  startGame();
+};
+let returnMenu = () => {
+  startLvl.style.display = "block";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  time.style.display = "none";
 };
 
 //leaderboard
 let leaderboard = () => {
-    startLvl.style.display = "none";
-    canvasLvl.style.display = "none";
-    failLvl.style.display = "none";
-    completLvl.style.display = "none";
-    leaderboardLvl.style.display = "block";
+  startLvl.style.display = "none";
+  canvasLvl.style.display = "none";
+  failLvl.style.display = "none";
+  completLvl.style.display = "none";
+  leaderboardLvl.style.display = "block";
+
+  // console.log(playerList);
+
+  playerList.sort((a, b) => a.score - b.score);
+  var content = "";
+
+  for (var i = 1; i < 11; i++) {
+    try {
+      var playerCur = playerList[i - 1];
+
+      if (playerCur) {
+        content += `
+          <tr>
+            <td>${i}</td>
+            <td>${playerCur.name}</td>
+            <td>${playerCur.score} s</td>
+          </tr>
+        `;
+      } else {
+        content += `
+          <tr>
+            <td>${i}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      console.error("Error while processing player", i, error);
+    }
+
+    document.getElementById("tbodyPlayer").innerHTML = content;
+  }
 };
 
 const teleport_positions = [];
@@ -288,6 +328,7 @@ let gameLoop = () => {
         console.log("before draw");
         draw();
         console.log("after draw");
+
     }
 };
 
@@ -340,6 +381,7 @@ let checkKey = () => {
     if (keys == 0) {
         map[1][1] = 7;
     }
+
 };
 
 let drawFoods = () => {
@@ -358,15 +400,6 @@ let drawFoods = () => {
     }
 };
 
-let drawScore = () => {
-    canvasContext.font = "20px Emulogic";
-    canvasContext.fillStyle = "white";
-    canvasContext.fillText(
-        "Score: " + score,
-        0,
-        oneBlockSize * (map.length + 1)
-    );
-};
 
 let drawGhosts = () => {
     for (let i = 0; i < ghosts.length; i++) {
@@ -387,6 +420,7 @@ let draw = () => {
         drawGamePass();
     }
     // drawRemainingLives();
+
 };
 
 let createRect = (x, y, width, height, img) => {
@@ -394,7 +428,6 @@ let createRect = (x, y, width, height, img) => {
     canvasContext.fillRect(x, y, width, height);
 };
 
-let checkGameOver = false;
 let drawGameOver = () => {
     canvasContext.font = "40px Pixelify Sans";
     canvasContext.fillStyle = "white";
@@ -616,10 +649,6 @@ let createGhosts = () => {
     // }
 };
 
-
-createNewPacman();
-createGhosts();
-gameLoop();
 
 window.addEventListener("keydown", (event) => {
     let k = event.keyCode;
