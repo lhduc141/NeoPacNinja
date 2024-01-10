@@ -236,20 +236,40 @@ let leaderboard = () => {
   failLvl.style.display = "none";
   completLvl.style.display = "none";
   leaderboardLvl.style.display = "block";
+
   // console.log(playerList);
 
   playerList.sort((a, b) => b.score - a.score);
   var content = "";
-  for (var i = 1; i < 11; i++) {
-    var playerCur = playerList[i - 1];
 
-    content += `
-      <tr>
-        <td>${i}</td>
-        <td>${playerCur.name}</td>
-        <td>${playerCur.score}</td>
-      </tr>
-    `;
+  for (var i = 1; i < 11; i++) {
+    try {
+      var playerCur = playerList[i - 1];
+
+      // Check if playerCur is defined before accessing its properties
+      if (playerCur) {
+        content += `
+          <tr>
+            <td>${i}</td>
+            <td>${playerCur.name}</td>
+            <td>${playerCur.score}</td>
+          </tr>
+        `;
+      } else {
+        // Handle the case where playerCur is undefined
+        content += `
+          <tr>
+            <td>${i}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        `;
+      }
+    } catch (error) {
+      // Handle any other unexpected errors
+      console.error("Error while processing player", i, error);
+    }
+
     document.getElementById("tbodyPlayer").innerHTML = content;
   }
 };
