@@ -50,10 +50,8 @@ let gamePaused = false;
 let fps = 30;
 let ninja;
 let oneBlockSize = 30;
-let foodColor = "#FEB897";
 
 let teleStatus = true;
-let teleCountDownTime = 3000;
 let speedBoostDuration;
 
 let score = 0;
@@ -388,21 +386,6 @@ let draw = () => {
     drawGamePass();
   }
 };
-let drawFoods = () => {
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      if (map[i][j] == 2) {
-        createRect(
-          j * oneBlockSize + oneBlockSize / 3,
-          i * oneBlockSize + oneBlockSize / 3,
-          oneBlockSize / 3,
-          oneBlockSize / 3,
-          foodColor
-        );
-      }
-    }
-  }
-};
 let drawEnemies = () => {
   for (let i = 0; i < enemies.length; i++) {
     enemies[i].draw();
@@ -441,26 +424,6 @@ let drawGamePass = () => {
     canvasWidth / 2 - textWidth / 2,
     canvasWidth / 2 + textHeight / 2
   );
-};
-
-let drawRemainingLives = () => {
-  canvasContext.font = "20px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
-
-  for (let i = 0; i < lives; i++) {
-    canvasContext.drawImage(
-      ninjaRightFrames,
-      2 * oneBlockSize,
-      0,
-      oneBlockSize,
-      oneBlockSize,
-      350 + i * oneBlockSize,
-      oneBlockSize * map.length + 2,
-      oneBlockSize,
-      oneBlockSize
-    );
-  }
 };
 let drawGround = () => {
   for (let i = 0; i < map.length; i++) {
