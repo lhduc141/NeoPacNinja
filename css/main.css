@@ -70,3 +70,23 @@ td:nth-child(2){
     color: white;
     font-size: 20px;
 }
+
+#start img {
+    position: absolute; /* Set the position to absolute */
+  }
+
+  #image1 {
+    top: 300px; /* Set the top position for the first image in pixels */
+    left: 600px; /* Set the left position for the first image in pixels */
+  }
+
+  #image2 {
+    top: 380px; /* Set the top position for the second image in pixels */
+    left: 880px; /* Set the left position for the second image in pixels */
+  }
+  #player-name::placeholder {
+    color: navy; /* Change the color of the placeholder text */
+    font-family:  'Pixelify Sans', sans-serif;
+
+    font-style: oblique; /* Apply italic font style to the placeholder text */
+  }
