@@ -17,12 +17,44 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
 
-    <link rel="stylesheet" href="./main.css" type="text/css" />
+    <link rel="stylesheet" href="./css/main.css" type="text/css" />
+
+    <style>
+      #start img {
+        position: absolute; /* Set the position to absolute */
+      }
+
+      #image1 {
+        top: 300px; /* Set the top position for the first image in pixels */
+        left: 600px; /* Set the left position for the first image in pixels */
+      }
+
+      #image2 {
+        top: 380px; /* Set the top position for the second image in pixels */
+        left: 880px; /* Set the left position for the second image in pixels */
+      }
+    </style>
   </head>
 
   <body>
     <div id="start" style="display: block">
-      <h1>NEO PAC NINJA</h1>
+      <h1>NEOPAC NINJA</h1>
+
+      <img
+        id="image1"
+        src="assets/avatar.png"
+        alt="Neopac Ninja Image"
+        width="40"
+        height="70"
+      />
+      <img
+        id="image2"
+        src="assets/enemyAvatar.png"
+        alt="Enemy Image"
+        width="50"
+        height="50"
+      />
+
       <a href="#" onclick="startGame()" style="color: white">Start Game</a>
       <a href="#" onclick="tutorialRule()">Tutorial</a>
       <a href="#" onclick="leaderboard()">Leaderboard</a>
@@ -45,13 +77,15 @@
       <p>
         <i class="fa fa-angle-right"></i> Avoid being caught by the soldiers
         <br />
-        <i class="fa fa-angle-right"></i> Find enough 3 keys to open the exit <br />
+        <i class="fa fa-angle-right"></i> Find enough 3 keys to open the exit
+        <br />
         <i class="fa fa-angle-right"></i> When the door appears, quickly run
         there to win the game <br />
         <i class="fa fa-angle-right"></i> Shoes can help you run faster <br />
         <i class="fa fa-angle-right"></i> The trapdoor can teleport to another
         place <br />
-        <i class="fa fa-angle-right"></i> Use the hidden room to get out of soldiers' sights<br />
+        <i class="fa fa-angle-right"></i> Use the hidden room to get out of
+        soldiers' sights<br />
         <i class="fa fa-angle-right"></i> You have only ONE chance ! <br />
       </p>
       <a href="#" onclick="back()">Back</a>
@@ -74,11 +108,36 @@
       <img id="hidden" src="assets/Hidden.png" width="140" height="20" />
       <img id="finish" src="assets/finish.png" width="140" height="20" />
 
-      <img id="animationright" src="assets/BlueNinjaRight.png" width="140" height="20" />
-      <img id="animationleft" src="assets/BlueNinjaLeft.png" width="140" height="20" />
-      <img id="animationup" src="assets/BlueNinjaUp.png" width="140" height="20" />
-      <img id="animationdown" src="assets/BlueNinjaDown.png" width="140" height="20" />
-      <img id="animationstop" src="assets/BlueNinjaStop.png" width="140" height="20" />
+      <img
+        id="animationright"
+        src="assets/BlueNinjaRight.png"
+        width="140"
+        height="20"
+      />
+      <img
+        id="animationleft"
+        src="assets/BlueNinjaLeft.png"
+        width="140"
+        height="20"
+      />
+      <img
+        id="animationup"
+        src="assets/BlueNinjaUp.png"
+        width="140"
+        height="20"
+      />
+      <img
+        id="animationdown"
+        src="assets/BlueNinjaDown.png"
+        width="140"
+        height="20"
+      />
+      <img
+        id="animationstop"
+        src="assets/BlueNinjaStop.png"
+        width="140"
+        height="20"
+      />
       <img id="enemy" src="assets/enemy.png" width="140" height="20" />
     </div>
 
@@ -109,9 +168,9 @@
       <a href="#" onclick="back()">Back</a>
     </div>
 
-    <script src="ghost.js"></script>
-    <script src="pacman.js"></script>
-    <script src="game.js"></script>
-    <script src="player.js"></script>
+    <script src="./js/model/player.js"></script>
+    <script src="./js/entities/enemy.js"></script>
+    <script src="./js/entities/ninja.js"></script>
+    <script src="./js/game.js"></script>
   </body>
 </html>

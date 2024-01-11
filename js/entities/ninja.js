@@ -1,4 +1,4 @@
-class Pacman {
+class Ninja {
   constructor(x, y, width, height, speed) {
     this.x = x;
     this.y = y;
@@ -138,8 +138,8 @@ class Pacman {
   checkCollisions() {
     let isCollided = false;
     if (
-      map[parseInt(this.y / oneBlockSize)][parseInt(this.x / oneBlockSize)] 
-        == 1 ||
+      map[parseInt(this.y / oneBlockSize)][parseInt(this.x / oneBlockSize)] ==
+        1 ||
       map[parseInt(this.y / oneBlockSize + 0.9999)][
         parseInt(this.x / oneBlockSize)
       ] == 1 ||
@@ -155,12 +155,12 @@ class Pacman {
     return isCollided;
   }
 
-  checkGhostCollision(ghosts) {
-    for (let i = 0; i < ghosts.length; i++) {
-      let ghost = ghosts[i];
+  checkEnemiesCollision(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+      let enemy = enemies[i];
       if (
-        ghost.getMapX() == this.getMapX() &&
-        ghost.getMapY() == this.getMapY()
+        enemy.getMapX() == this.getMapX() &&
+        enemy.getMapY() == this.getMapY()
       ) {
         return true;
       }
@@ -222,19 +222,19 @@ class Pacman {
     let spriteSheet;
     switch (this.direction) {
       case DIRECTION_RIGHT:
-        spriteSheet = pacmanRightFrames;
+        spriteSheet = ninjaRightFrames;
         break;
       case DIRECTION_UP:
-        spriteSheet = pacmanUpFrames;
+        spriteSheet = ninjaUpFrames;
         break;
       case DIRECTION_LEFT:
-        spriteSheet = pacmanLeftFrames;
+        spriteSheet = ninjaLeftFrames;
         break;
       case DIRECTION_BOTTOM:
-        spriteSheet = pacmanDownFrames;
+        spriteSheet = ninjaDownFrames;
         break;
       default:
-        spriteSheet = pacmanStopFrames; // Default to right direction
+        spriteSheet = ninjaStopFrames; // Default to right direction
         break;
     }
 
@@ -253,28 +253,32 @@ class Pacman {
   }
 
   onDoor() {
-    if (map[13][11] == 7 && this.x == 11 * oneBlockSize && this.y == 13 * oneBlockSize) {
+    if (
+      map[13][11] == 7 &&
+      this.x == 11 * oneBlockSize &&
+      this.y == 13 * oneBlockSize
+    ) {
       return true;
     }
     return false;
   }
-  isHidden(){
+  isHidden() {
     let x1 = this.x;
     let y1 = this.y;
     let x2 = this.x + this.width;
     let y2 = this.y + this.height;
-    for(let i = 0; i < hiddenRoom.length; i++){
+    for (let i = 0; i < hiddenRoom.length; i++) {
       let roomX1 = oneBlockSize * hiddenRoom[i].x;
       let roomY1 = oneBlockSize * hiddenRoom[i].y;
       let roomX2 = roomX1 + oneBlockSize;
       let roomY2 = roomY1 + oneBlockSize;
-      if(Math.min(x2, roomX2) > (Math.max(x1, roomX1) + oneBlockSize / 2) &&
-          Math.min(y2,roomY2) > (Math.max(x1, roomX1) + oneBlockSize / 2)
-        ){
-          return true;
-        }
+      if (
+        Math.min(x2, roomX2) > Math.max(x1, roomX1) + oneBlockSize / 2 &&
+        Math.min(y2, roomY2) > Math.max(x1, roomX1) + oneBlockSize / 2
+      ) {
+        return true;
+      }
     }
     return false;
   }
-
 }
